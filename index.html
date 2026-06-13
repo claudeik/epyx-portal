@@ -173,12 +173,16 @@
           <div class="sim-content">
             <!-- Logs Panel -->
             <div id="panel-logs" class="terminal-panel active">
-              <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
+              <div id="sim-logs" style="height: 100%; overflow-y: auto;">
+                <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
+              </div>
             </div>
 
             <!-- Chat Panel -->
             <div id="panel-chat" class="terminal-panel">
-              <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
+              <div id="sim-chat" style="height: 100%; overflow-y: auto;">
+                <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
+              </div>
             </div>
 
             <!-- Code Panel -->
