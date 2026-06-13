@@ -867,7 +867,7 @@ section {
   background: rgba(16, 185, 129, 0.08);
 }
 
-.case-card.gothan .case-tag {
+.case-card.urus .case-tag {
   border-color: var(--gold-primary);
   color: var(--gold-primary);
   background: rgba(212, 175, 55, 0.08);

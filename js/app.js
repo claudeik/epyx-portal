@@ -57,7 +57,7 @@ const translations = {
     "cases.tag.dev": "Developer Tooling",
     "cases.tag.sustainability": "Sustentabilidad",
     "cases.card.wagari.desc": "Wagari Carbon es una plataforma verde diseñada para certificar, trazar y comercializar créditos de carbono globales con auditoría distribuida e inmutable.",
-    "cases.card.gothan.desc": "Gothan Stack es una suite avanzada para desarrolladores que integra flujos automatizados de especificación-código-validación en entornos distribuidos.",
+    "cases.card.urus.desc": "Urus Stack es una suite avanzada para desarrolladores que integra flujos automatizados de especificación-código-validación en entornos distribuidos.",
     "cases.card.paraguay.desc": "Portal Paraguai unifica el ecosistema de facturación electrónica y pasarela de cobros transfronterizos para empresas del Mercosur con alta resiliencia.",
 
     "contact.title": "Comience un Proyecto de Alta Tecnología",
@@ -126,7 +126,7 @@ const translations = {
     "cases.tag.dev": "Developer Tooling",
     "cases.tag.sustainability": "Sustentabilidade",
     "cases.card.wagari.desc": "O Wagari Carbon é um ecossistema sustentável para certificação, rastreamento e comercialização de créditos de carbono com transparência distribuída.",
-    "cases.card.gothan.desc": "Gothan Stack é uma infraestrutura de desenvolvimento moderna que automatiza o ciclo completo de spec, código e validação por múltiplos agentes de IA.",
+    "cases.card.urus.desc": "Urus Stack é uma infraestrutura de desenvolvimento moderna que automatiza o ciclo completo de spec, código e validação por múltiplos agentes de IA.",
     "cases.card.paraguay.desc": "O Portal Paraguai é uma plataforma altamente estável para faturamento eletrônico e conexões financeiras multi-moeda na América Latina.",
 
     "contact.title": "Comece Seu Projeto de Alta Tecnologia",
@@ -195,7 +195,7 @@ const translations = {
     "cases.tag.dev": "Developer Tooling",
     "cases.tag.sustainability": "Sustainability",
     "cases.card.wagari.desc": "Wagari Carbon is a green ledger platform engineered to audit, trace, and trade global carbon offsets with distributed, tamper-proof security.",
-    "cases.card.gothan.desc": "Gothan Stack is an advanced developer tool suite automating specification-to-code pipelines across multi-agent virtual deployments.",
+    "cases.card.urus.desc": "Urus Stack is an advanced developer tool suite automating specification-to-code pipelines across multi-agent virtual deployments.",
     "cases.card.paraguay.desc": "Portal Paraguai consolidates electronic invoicing and regional multi-currency clearing for high-performance enterprise operations.",
 
     "contact.title": "Initiate Next-Gen Engineering",
