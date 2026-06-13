@@ -515,7 +515,7 @@ section {
 
 .simulator-workspace {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 400px 1fr;
   background: var(--bg-terminal);
   border: 1px solid var(--border-color);
   border-radius: 16px;

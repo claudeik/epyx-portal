@@ -135,59 +135,48 @@
         </div>
 
         <div class="simulator-workspace">
-          <!-- Sidebar tabs -->
-          <div class="sim-sidebar">
-            <div>
-              <div class="sim-sidebar-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                </svg>
-                EPYX Workspace
-              </div>
-              <div class="sim-tabs">
-                <button class="tab-btn active" data-tab="logs">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                    <line x1="8" y1="21" x2="16" y2="21" />
-                    <line x1="12" y1="17" x2="12" y2="21" />
-                  </svg>
-                  <span data-i18n="simulator.terminal.tab.logs">Logs del Sistema</span>
-                </button>
-                <button class="tab-btn" data-tab="chat">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                  <span data-i18n="simulator.terminal.tab.chat">Conversación IA</span>
-                </button>
-                <button class="tab-btn" data-tab="code">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="16 18 22 12 16 6" />
-                    <polyline points="8 6 2 12 8 18" />
-                  </svg>
-                  <span data-i18n="simulator.terminal.tab.code">Código Producido</span>
-                </button>
-              </div>
+          <!-- Left Sidebar: Persistent Logs -->
+          <div class="sim-sidebar" style="padding: 0; display: flex; flex-direction: column;">
+            <div class="sim-sidebar-title" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.2);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; margin-right:8px;">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+              <span data-i18n="simulator.terminal.tab.logs">Logs del Sistema</span>
+            </div>
+            <div id="sim-logs" class="sim-pane-content" style="flex: 1; overflow-y: auto; padding: 20px; font-family: var(--font-code); font-size: 0.85rem; color: var(--text-muted);">
+              <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
+            </div>
           </div>
 
-          <!-- Console Views -->
-          <div class="sim-content">
-            <!-- Logs Panel -->
-            <div id="panel-logs" class="terminal-panel active">
-              <div id="sim-logs" style="height: 100%; overflow-y: auto;">
+          <!-- Main Content: Chat and Code Tabs -->
+          <div class="sim-content" style="padding: 0; display: flex; flex-direction: column;">
+            <div class="sim-tabs-header" style="display: flex; border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.2);">
+              <button class="tab-btn active" data-tab="chat" style="border-radius: 0; border: none; border-right: 1px solid var(--border-color); padding: 14px 24px; flex: 1; justify-content: center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                <span data-i18n="simulator.terminal.tab.chat">Conversación IA</span>
+              </button>
+              <button class="tab-btn" data-tab="code" style="border-radius: 0; border: none; padding: 14px 24px; flex: 1; justify-content: center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+                <span data-i18n="simulator.terminal.tab.code">Código Producido</span>
+              </button>
+            </div>
+            
+            <div id="panel-chat" class="terminal-panel active" style="flex: 1; overflow: hidden;">
+              <div id="sim-chat" style="height: 100%; overflow-y: auto; padding: 24px;">
                 <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
               </div>
             </div>
-
-            <!-- Chat Panel -->
-            <div id="panel-chat" class="terminal-panel">
-              <div id="sim-chat" style="height: 100%; overflow-y: auto;">
-                <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
+            <div id="panel-code" class="terminal-panel" style="flex: 1; overflow: hidden;">
+              <div style="height: 100%; overflow-y: auto; padding: 24px;">
+                <pre><code id="sim-code" class="language-javascript" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</code></pre>
               </div>
-            </div>
-
-            <!-- Code Panel -->
-            <div id="panel-code" class="terminal-panel">
-              <pre><code id="sim-code" class="language-javascript" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</code></pre>
             </div>
           </div>
         </div>
