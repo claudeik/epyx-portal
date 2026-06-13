@@ -469,17 +469,7 @@ contract RWACollateralVault is ReentrancyGuard, Ownable {
     }
 }`
   }
-};ncy,
-      exchangeRate: rate,
-      status: 'SETTLED'
-    }, { transaction: t });
-
-    return { tx, newBalance: wallet.balance };
-  });
-}`
-  }
 };
-
 // Set active language
 function setLanguage(lang) {
   if (!translations[lang]) return;
