@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPYX SAS Uruguay - Plataformas de Pago y Automatización con IA</title>
+  
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="EPYX SAS Uruguay - Plataformas de Pago y Automatización con IA">
+  <meta name="description" content="Concebimos y producimos plataformas de pago multimoneda, automatización con IA y squads de desarrollo de última generación integrados con programadores virtuales. Spec-first como core de nuestra metodología.">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Liquid Screen Canvas -->
+  <canvas id="liquid-canvas"></canvas>
+  <div class="background-overlay"></div>
+
+  <!-- SVG Filter for the Liquid Screen (Metaball) effect -->
+  <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" width="0" height="0">
+    <defs>
+      <filter id="liquid-filter">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="25" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 65 -20" result="goo" />
+        <feBlend in="SourceGraphic" in2="goo" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <a href="#home" class="logo">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
+      </svg>
+      EPYX<span>.</span>
+    </a>
+    
+    <nav>
+      <ul class="nav-menu">
+        <li><a href="#home" class="nav-link active" data-i18n="nav.home">Inicio</a></li>
+        <li><a href="#methodology" class="nav-link" data-i18n="nav.methodology">Metodología</a></li>
+        <li><a href="#simulator" class="nav-link" data-i18n="nav.services">AI Simulator</a></li>
+        <li><a href="#services" class="nav-link" data-i18n="nav.services">Especialidades</a></li>
+        <li><a href="#cases" class="nav-link" data-i18n="nav.cases">Casos Reais</a></li>
+        <li><a href="#contact" class="nav-link" data-i18n="nav.contact">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="lang-selector">
+      <button class="lang-btn active" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="pt">PT</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="home">
+      <div class="hero-content fade-in-section">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span class="hero-badge-text" data-i18n="hero.subtitle">EPYX SAS Uruguay</span>
+        </div>
+        <h1 class="hero-title" data-i18n="hero.title">Plataformas de Pago y Automatización con Inteligencia Artificial</h1>
+        <p class="hero-desc" data-i18n="hero.desc">Concebimos y producimos desde Uruguay para el mundo. Squads hiper-especializadas integradas por desarrolladores de élite y programadores virtuales de última generación guiados bajo el concepto de Spec-First.</p>
+        
+        <div class="btn-container">
+          <a href="#simulator" class="btn btn-primary hero-btn-simulate" data-i18n="hero.cta.simulate">Simular Squad de IA</a>
+          <a href="#contact" class="btn btn-secondary hero-btn-contact" data-i18n="hero.cta.contact">Falar com um Especialista</a>
+        </div>
+      </div>
+
+      <a href="#methodology" class="scroll-indicator">
+        <span data-i18n="nav.methodology">Metodología</span>
+        <div class="scroll-mouse">
+          <span class="scroll-wheel"></span>
+        </div>
+      </a>
+    </section>
+
+    <!-- Methodology (Spec-First & Vibe Coding) -->
+    <section id="methodology" class="fade-in-section">
+      <span class="section-tag" data-i18n="methodology.subtitle">Metodología Core</span>
+      <h2 class="section-title" data-i18n="methodology.title">Spec-First & Vibe Coding</h2>
+      <p class="section-desc" data-i18n="methodology.desc">La nueva generación del desarrollo de software no se trata de escribir código a ciegas. Criamos sistemas hiper-eficientes estructurando especificaciones detalladas preparadas para que múltiples agentes autónomos colaboren y resuelvan problemas complejos.</p>
+      
+      <div class="methodology-grid">
+        <div class="glass-card step-card">
+          <div class="step-number">01</div>
+          <h3 data-i18n="methodology.step1.title">1. Especificación (Spec-First)</h3>
+          <p data-i18n="methodology.step1.desc">Diseñamos un plano de arquitectura exhaustivo. Una spec bien definida evita alucinaciones de IA y define interfaces rígidas antes de la codificación.</p>
+        </div>
+        
+        <div class="glass-card step-card">
+          <div class="step-number">02</div>
+          <h3 data-i18n="methodology.step2.title">2. Colaboración Multi-Agente</h3>
+          <p data-i18n="methodology.step2.desc">Desplegamos squads con agentes especializados (Antigravity, Claude Code, Cursor) integrados con arquitectos expertos para codificación en paralelo.</p>
+        </div>
+        
+        <div class="glass-card step-card">
+          <div class="step-number">03</div>
+          <h3 data-i18n="methodology.step3.title">3. Validación de Sistemas</h3>
+          <p data-i18n="methodology.step3.desc">Validadores autónomos ejecutan bancos de pruebas automáticas, garantizan tipos estrictos y auditan la seguridad antes de cualquier despliegue.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Simulator Section (The WOW Interactive Console) -->
+    <section id="simulator" class="fade-in-section">
+      <span class="section-tag" data-i18n="simulator.subtitle">Laboratorio Interactivo</span>
+      <h2 class="section-title" data-i18n="simulator.title">AI Squad Simulator</h2>
+      
+      <div class="simulator-container">
+        <div class="project-selector">
+          <p data-i18n="simulator.label">Seleccione un proyecto para ver los agentes cooperar:</p>
+          <div class="project-buttons">
+            <button class="project-btn active" data-project="payments" data-i18n="simulator.project.payments">Pagos Multimoneda & Pix</button>
+            <button class="project-btn" data-project="care" data-i18n="simulator.project.care">Customer Care Multi-Agente</button>
+            <button class="project-btn" data-project="docs" data-i18n="simulator.project.docs">Clasificación de Documentos Legales</button>
+            <button class="project-btn" data-project="tokenization" data-i18n="simulator.project.tokenization">Tokenización de Activos & Cripto</button>
+          </div>
+        </div>
+
+        <div class="simulator-workspace">
+          <!-- Sidebar tabs -->
+          <div class="sim-sidebar">
+            <div>
+              <div class="sim-sidebar-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+                EPYX Workspace
+              </div>
+              <div class="sim-tabs">
+                <button class="tab-btn active" data-tab="logs">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                  </svg>
+                  <span data-i18n="simulator.terminal.tab.logs">Logs del Sistema</span>
+                </button>
+                <button class="tab-btn" data-tab="chat">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  <span data-i18n="simulator.terminal.tab.chat">Conversación IA</span>
+                </button>
+                <button class="tab-btn" data-tab="code">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
+                  <span data-i18n="simulator.terminal.tab.code">Código Producido</span>
+                </button>
+              </div>
+            </div>
+            
+            <button class="sim-btn-run">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              <span data-i18n="simulator.btn.run">Ejecutar Simulación de Squad</span>
+            </button>
+          </div>
+
+          <!-- Console Views -->
+          <div class="sim-content">
+            <!-- Logs Panel -->
+            <div id="panel-logs" class="terminal-panel active">
+              <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
+            </div>
+
+            <!-- Chat Panel -->
+            <div id="panel-chat" class="terminal-panel">
+              <div class="idle-text" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</div>
+            </div>
+
+            <!-- Code Panel -->
+            <div id="panel-code" class="terminal-panel">
+              <pre><code id="sim-code" class="language-javascript" data-i18n="simulator.terminal.idle">Consola inactiva. Seleccione un proyecto arriba y haga clic en 'Ejecutar Simulación'...</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services / Specialties Section -->
+    <section id="services" class="fade-in-section">
+      <span class="section-tag" data-i18n="services.subtitle">Especialidades</span>
+      <h2 class="section-title" data-i18n="services.title">Sistemas de Alta Complexidad</h2>
+      
+      <div class="services-grid">
+        <div class="glass-card service-card">
+          <div class="service-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+          </div>
+          <h3 data-i18n="services.card.care.title">Sistemas Multi-Agente de Customer Care</h3>
+          <p data-i18n="services.card.care.desc">Flujos de atención al cliente integrados donde agentes especializados analizam sentimentos, escalam incidências e resolvem consultas complexas automaticamente.</p>
+        </div>
+
+        <div class="glass-card service-card">
+          <div class="service-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+          </div>
+          <h3 data-i18n="services.card.docs.title">Clasificación y Clusterización Legal</h3>
+          <p data-i18n="services.card.docs.desc">Análisis inteligente de contratos y documentos con validez jurídica. Indexación semántica, extracción de cláusulas y organización documental autónoma.</p>
+        </div>
+
+        <div class="glass-card service-card">
+          <div class="service-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23" />
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+          </div>
+          <h3 data-i18n="services.card.payments.title">Pagos Multimoneda & Pix Internacional</h3>
+          <p data-i18n="services.card.payments.desc">Pasarelas de pagos globales optimizadas desde Uruguay. Monederos multi-divisa, liquidación internacional y conversión instantánea.</p>
+        </div>
+
+        <div class="glass-card service-card">
+          <div class="service-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="8"/>
+              <line x1="12" y1="2" x2="12" y2="6"/>
+              <line x1="12" y1="18" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="6" y2="12"/>
+              <line x1="18" y1="12" x2="22" y2="12"/>
+            </svg>
+          </div>
+          <h3 data-i18n="services.card.tokenization.title">Tokenización de Activos & Capitalização</h3>
+          <p data-i18n="services.card.tokenization.desc">Tokenización de activos reales (RWA) y estructuración digital para la captación de capital de empresas tecnológicas y financieras con smart contracts.</p>
+        </div>
+
+        <div class="glass-card service-card">
+          <div class="service-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              <line x1="12" y1="15" x2="12" y2="18"/>
+            </svg>
+          </div>
+          <h3 data-i18n="services.card.credit.title">Financiamientos Respaldados en Cripto</h3>
+          <p data-i18n="services.card.credit.desc">Sistemas de crédito colateralizados en tokens integrando oráculos Chainlink y liquidaciones automáticas basadas en ratios de salud en tiempo real.</p>
+        </div>
+
+        <div class="glass-card service-card">
+          <div class="service-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+              <line x1="12" y1="18" x2="12.01" y2="18" />
+            </svg>
+          </div>
+          <h3 data-i18n="services.card.apps.title">Aplicaciones Fintech de Última Milla</h3>
+          <p data-i18n="services.card.apps.desc">Interfaces de usuario ultra-fluidas y seguras para monederos digitales, transferencias instantáneas y apps de pago móvil nativas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cases Section -->
+    <section id="cases" class="fade-in-section">
+      <span class="section-tag" data-i18n="cases.subtitle">Producido en Uruguay para el Mundo</span>
+      <h2 class="section-title" data-i18n="cases.title">Casos Reales en Producción</h2>
+      
+      <div class="cases-grid">
+        <div class="glass-card case-card wagari">
+          <div class="case-header">
+            <span class="case-name">Wagari Carbon</span>
+            <span class="case-tag" data-i18n="cases.tag.sustainability">Sustentabilidad</span>
+          </div>
+          <p data-i18n="cases.card.wagari.desc">Wagari Carbon es una plataforma verde diseñada para certificar, trazar y comercializar créditos de carbono globales con auditoría distribuida e inmutable.</p>
+          <a href="#" class="case-link">
+            Case Details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="glass-card case-card gothan">
+          <div class="case-header">
+            <span class="case-name">Gothan Stack</span>
+            <span class="case-tag" data-i18n="cases.tag.dev">Developer Tooling</span>
+          </div>
+          <p data-i18n="cases.card.gothan.desc">Gothan Stack es una suite avanzada para desarrolladores que integra flujos automatizados de especificación-código-validación en entornos distribuidos.</p>
+          <a href="#" class="case-link">
+            Case Details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="glass-card case-card">
+          <div class="case-header">
+            <span class="case-name">Portal Paraguai</span>
+            <span class="case-tag" data-i18n="cases.tag.fintech">Fintech</span>
+          </div>
+          <p data-i18n="cases.card.paraguay.desc">Portal Paraguai unifica el ecosistema de facturación electrónica y pasarela de cobros transfronterizos para empresas del Mercosur con alta resiliencia.</p>
+          <a href="#" class="case-link">
+            Case Details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="fade-in-section">
+      <div class="contact-layout">
+        <div class="contact-info">
+          <span class="section-tag" data-i18n="nav.contact">Contacto</span>
+          <h2 class="section-title" data-i18n="contact.title">Comience un Proyecto de Alta Tecnología</h2>
+          <p class="section-desc" data-i18n="contact.desc">Diseñemos la especificación de su sistema y despleguemos una squad altamente capacitada de arquitectos de software y agentes virtuales.</p>
+        </div>
+
+        <div class="contact-form-container glass-card">
+          <form id="epyx-contact-form" class="contact-form">
+            <div class="form-group">
+              <label for="form-name" data-i18n="contact.form.name">Nombre / Empresa</label>
+              <input type="text" id="form-name" required data-i18n="contact.form.name" placeholder="Nombre / Empresa">
+            </div>
+
+            <div class="form-group">
+              <label for="form-email" data-i18n="contact.form.email">Correo electrónico</label>
+              <input type="email" id="form-email" required data-i18n="contact.form.email" placeholder="Correo electrónico">
+            </div>
+
+            <div class="form-group">
+              <label for="form-message" data-i18n="contact.form.message">Cuéntenos sobre el sistema que desea automatizar</label>
+              <textarea id="form-message" rows="5" required data-i18n="contact.form.message" placeholder="Cuéntenos sobre el sistema que desea automatizar"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" data-i18n="contact.form.submit">Iniciar Solicitud de Proyecto</button>
+          </form>
+
+          <div id="form-response"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <a href="#home" class="footer-logo">
+      EPYX<span>.</span>
+    </a>
+    <p>&copy; 2026 EPYX SAS Uruguay. All rights reserved. Made in Uruguay for the world.</p>
+    <div class="footer-links">
+      <a href="#">Security</a>
+      <a href="#">Architecture Spec</a>
+      <a href="#">Privacy</a>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/liquid.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
