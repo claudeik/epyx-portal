@@ -1216,3 +1216,169 @@ footer {
     text-align: center;
   }
 }
+
+/* ============================================================
+   EPYX × Zoho WebToContacts Form — Dark Theme Override
+   ============================================================ */
+
+/* Contact info badges */
+.contact-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.contact-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.badge-icon {
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(197, 160, 89, 0.08);
+  border: 1px solid rgba(197, 160, 89, 0.2);
+  border-radius: 8px;
+}
+
+/* Zoho form wrapper */
+.zoho-form-wrapper {
+  padding: 36px;
+}
+
+.zoho-form-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: 0.5px;
+}
+
+.zoho-form-header svg {
+  stroke: var(--gold-primary);
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+  flex-shrink: 0;
+}
+
+/* The EPYX-styled form */
+.epyx-zoho-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.epyx-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.epyx-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.epyx-form-group label {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}
+
+.required-mark {
+  color: #f87171;
+  margin-left: 2px;
+}
+
+.epyx-input,
+.epyx-select {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  width: 100%;
+  transition: var(--transition-fast);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.epyx-input::placeholder {
+  color: rgba(148, 163, 184, 0.4);
+}
+
+.epyx-input:focus,
+.epyx-select:focus {
+  border-color: var(--gold-primary);
+  background: rgba(197, 160, 89, 0.05);
+  box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1);
+}
+
+.epyx-input:hover,
+.epyx-select:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.epyx-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.epyx-select option {
+  background-color: #0b101e;
+  color: var(--text-main);
+}
+
+.epyx-form-actions {
+  margin-top: 8px;
+}
+
+.epyx-submit-btn {
+  width: 100%;
+  padding: 16px 28px;
+  font-size: 1rem;
+  border-radius: 12px;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.epyx-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #2e3039;
+  color: #718096;
+}
+
+@media (max-width: 576px) {
+  .epyx-form-row {
+    grid-template-columns: 1fr;
+  }
+  .zoho-form-wrapper {
+    padding: 24px;
+  }
+}
+
