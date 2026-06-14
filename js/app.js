@@ -782,41 +782,151 @@ function runSimulation(projectKey) {
   simIntervals.push(codeTimer);
 }
 
-// Contact Form submission mock handler
+// ============================================================
+// Zoho CRM Integration — Real Lead Creation via OAuth 2.0
+// ============================================================
+
+// Step 1: Exchange refresh_token for a fresh access_token
+async function getZohoAccessToken() {
+  const params = new URLSearchParams({
+    refresh_token: ZOHO_CONFIG.refreshToken,
+    client_id:     ZOHO_CONFIG.clientId,
+    client_secret: ZOHO_CONFIG.clientSecret,
+    grant_type:    'refresh_token',
+  });
+
+  const res = await fetch(`${ZOHO_CONFIG.accountsUrl}/oauth/v2/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+  });
+
+  if (!res.ok) throw new Error(`Token exchange failed: ${res.status}`);
+  const data = await res.json();
+  if (!data.access_token) throw new Error(data.error || 'No access_token returned');
+  return data.access_token;
+}
+
+// Step 2: Create Lead in Zoho CRM
+async function createZohoLead({ name, email, message }) {
+  const accessToken = await getZohoAccessToken();
+
+  // Split name into First / Last for Zoho CRM fields
+  const nameParts = name.trim().split(' ');
+  const lastName  = nameParts.length > 1 ? nameParts.slice(1).join(' ') : nameParts[0];
+  const firstName = nameParts.length > 1 ? nameParts[0] : '';
+
+  const leadPayload = {
+    data: [
+      {
+        Last_Name:   lastName,
+        First_Name:  firstName,
+        Email:       email,
+        Description: message,
+        Lead_Source: 'Web Site',
+        Company:     name, // Company field = full name/company from form
+      },
+    ],
+  };
+
+  const res = await fetch(`${ZOHO_CONFIG.apiDomain}/crm/v7/Leads`, {
+    method:  'POST',
+    headers: {
+      'Authorization': `Zoho-oauthtoken ${accessToken}`,
+      'Content-Type':  'application/json',
+    },
+    body: JSON.stringify(leadPayload),
+  });
+
+  if (!res.ok) throw new Error(`CRM API error: ${res.status}`);
+  const result = await res.json();
+
+  // Check for CRM-level errors
+  const record = result.data?.[0];
+  if (record && record.status === 'error') {
+    throw new Error(record.message || 'CRM rejected the lead');
+  }
+
+  return result;
+}
+
+// Contact Form — real Zoho CRM submission handler
 function setupContactForm() {
   const form = document.getElementById('epyx-contact-form');
   const responseDiv = document.getElementById('form-response');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    
-    // Disable inputs
-    form.querySelectorAll('input, textarea').forEach(el => el.disabled = true);
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `<span class="spinner"></span> <span data-i18n="contact.form.sending">${translations[currentLanguage]["contact.form.sending"]}</span>`;
-    
-    // Simulate terminal establishing handshake and transmitting payload
-    setTimeout(() => {
-      submitBtn.innerHTML = originalText;
+
+    const submitBtn  = form.querySelector('button[type="submit"]');
+    const originalHTML = submitBtn.innerHTML;
+
+    const name    = document.getElementById('form-name').value.trim();
+    const email   = document.getElementById('form-email').value.trim();
+    const message = document.getElementById('form-message').value.trim();
+
+    // Disable form while submitting
+    form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
+    submitBtn.innerHTML = `<span class="spinner"></span> <span data-i18n="contact.form.sending">${translations[currentLanguage]['contact.form.sending']}</span>`;
+    responseDiv.innerHTML = '';
+
+    // Animate terminal handshake lines while waiting
+    const terminalLines = [
+      '&gt; OPENING SECURE TUNNEL [AES-256]...',
+      '&gt; AUTHENTICATING WITH CRM NODE...',
+      '&gt; ENCRYPTING PAYLOAD...',
+      '&gt; TRANSMITTING PROJECT DATA...',
+    ];
+    let lineIdx = 0;
+    responseDiv.className = 'form-response-success';
+    responseDiv.innerHTML = `<div class="terminal-success" id="terminal-anim"></div>`;
+    const terminalEl = document.getElementById('terminal-anim');
+
+    const lineTimer = setInterval(() => {
+      if (lineIdx < terminalLines.length) {
+        const p = document.createElement('p');
+        p.className = 'blink-fast';
+        p.innerHTML = terminalLines[lineIdx++];
+        terminalEl.appendChild(p);
+      } else {
+        clearInterval(lineTimer);
+      }
+    }, 500);
+
+    try {
+      await createZohoLead({ name, email, message });
+
+      clearInterval(lineTimer);
+
+      // Success state
+      terminalEl.innerHTML = `
+        <p class="blink-fast">&gt; SECURE TUNNEL OPENED [AES-256]</p>
+        <p>&gt; LEAD REGISTERED IN CRM [OK]</p>
+        <p>&gt; METADATA ENCRYPTED &amp; LOGGED</p>
+        <p class="success-text" data-i18n="contact.form.success">${translations[currentLanguage]['contact.form.success']}</p>
+      `;
+
       form.reset();
-      form.querySelectorAll('input, textarea').forEach(el => el.disabled = false);
-      submitBtn.disabled = false;
-      
-      responseDiv.className = 'form-response-success';
+      responseDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    } catch (err) {
+      clearInterval(lineTimer);
+      console.error('Zoho CRM submission error:', err);
+
+      responseDiv.className = 'form-response-error';
       responseDiv.innerHTML = `
         <div class="terminal-success">
-          <p class="blink-fast">&gt; SECURE TUNNEL OPENED [AES-256]</p>
-          <p>&gt; TRANSMITTING PROJECT DATA...</p>
-          <p>&gt; METADATA ENCRYPTED & LOGGED</p>
-          <p class="success-text" data-i18n="contact.form.success">${translations[currentLanguage]["contact.form.success"]}</p>
+          <p style="color: #f87171;">&gt; ERROR: Could not transmit data.</p>
+          <p style="color: #f87171;">&gt; ${err.message}</p>
+          <p style="color: var(--text-muted); margin-top: 8px;">Please try again or contact us directly.</p>
         </div>
       `;
-      responseDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 2500);
+    } finally {
+      // Re-enable form
+      form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = false);
+      submitBtn.innerHTML = originalHTML;
+    }
   });
 }
 
