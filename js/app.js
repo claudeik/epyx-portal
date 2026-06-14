@@ -30,6 +30,7 @@ const translations = {
     "simulator.project.docs": "Clasificación de Documentos Legales",
     "simulator.project.payments": "Pagos Multimoneda & Pix",
     "simulator.project.tokenization": "Tokenización de Activos & Cripto",
+    "simulator.project.carbon": "Visualización Carbono & Energía",
     "simulator.terminal.tab.logs": "Logs del Sistema",
     "simulator.terminal.tab.chat": "Conversación IA",
     "simulator.terminal.tab.code": "Código Producido",
@@ -97,8 +98,9 @@ const translations = {
     "simulator.label": "Selecione um projeto para ver a squad de agentes colaborar:",
     "simulator.project.care": "Customer Care Multi-Agente",
     "simulator.project.docs": "Classificação de Documentos Legais",
-    "simulator.project.payments": "Pagamentos Multi-Moedas & Pix",
+    "simulator.project.payments": "Pagamentos Multi-moeda & Pix",
     "simulator.project.tokenization": "Tokenização de Ativos & Cripto",
+    "simulator.project.carbon": "Visualização Carbono & Energia",
     "simulator.terminal.tab.logs": "Logs do Sistema",
     "simulator.terminal.tab.chat": "Conversa de Agentes",
     "simulator.terminal.tab.code": "Código Produzido",
@@ -168,6 +170,7 @@ const translations = {
     "simulator.project.docs": "Legal Document Classification",
     "simulator.project.payments": "Multi-Currency Payments & Pix",
     "simulator.project.tokenization": "Asset Tokenization & Crypto",
+    "simulator.project.carbon": "Carbon Data & Renewable Energy",
     "simulator.terminal.tab.logs": "System Logs",
     "simulator.terminal.tab.chat": "Agent Conversation",
     "simulator.terminal.tab.code": "Generated Code",
@@ -467,6 +470,61 @@ contract RWACollateralVault is ReentrancyGuard, Ownable {
         
         return (collateralValue * 100) / vault.borrowedAmount;
     }
+}`
+  },
+  carbon: {
+    logs: [
+      "STATUS: Initiating Green Data Engine (Wagari Carbon ref)...",
+      "SPECIFICATION: Loading spec 'spec/carbon_lead_identifier.json'...",
+      "ARCHITECT: Human Architect defined parameters for emission thresholds & renewable financing.",
+      "DEPLOYING: Deploying virtual developers (Antigravity & Cursor)...",
+      "ANTIGRAVITY: Scaffolding Data Visualization dashboard for IoT emission tracking: [OK]",
+      "CURSOR: Designing ML clustering model to identify high-emission leads... [COMPILING]",
+      "ANTIGRAVITY: Linking crypto-collateral engine for renewable energy project financing: [OK]",
+      "CURSOR: Backtesting lead generation against Wagari Carbon historical datasets: [OK]",
+      "VALIDATOR: Running simulation. 450 high-emission leads identified for offset sales.",
+      "VALIDATOR: Smart contract audit for collateralized financing: PASSED.",
+      "COMPLETED: Carbon offset & Renewable financing platform active.",
+      "SYSTEM: Deployment finalized in 5100ms."
+    ],
+    chat: [
+      { sender: "Architect", message: "Goal: Build a data visualization tool that identifies high-emission leads. We can offer them Wagari Carbon offsets or renewable energy projects financed via crypto collateral." },
+      { sender: "Antigravity", message: "Understood. I will build the real-time visualization dashboard and connect the crypto-collateral engine to issue renewable energy bonds." },
+      { sender: "Cursor", message: "I'll handle the data processing. I will train a clustering model on historical Wagari Carbon data to pinpoint companies that exceed emission thresholds." },
+      { sender: "Antigravity", message: "Perfect. When a lead is identified, the system will automatically propose a smart contract for offset purchase or collateralized financing." },
+      { sender: "Cursor", message: "The ML model is compiled. I've integrated the crypto guarantee parameters so they adjust based on the client's risk profile." },
+      { sender: "Validator", message: "Integration tested. Data pipelines are secure. The smart contracts for renewable financing passed the security audit with 100% coverage." }
+    ],
+    code: `// core/carbon_finance.js
+import { MLCluster } from '@wagari/ml-core';
+import { CryptoCollateralEngine } from '../finance/collateral.js';
+import { Tokenizer } from '../blockchain/tokenizer.js';
+
+export class CarbonLeadEngine {
+  constructor(dataset) {
+    this.model = new MLCluster({ threshold: 'HIGH_EMISSION' });
+    this.dataset = dataset;
+  }
+
+  async identifyLeads() {
+    const predictions = await this.model.predict(this.dataset);
+    return predictions.filter(lead => lead.emissionScore > 85);
+  }
+
+  async proposeFinancing(leadId, energyProject) {
+    const collateralEngine = new CryptoCollateralEngine();
+    const riskProfile = await collateralEngine.assessRisk(leadId);
+    
+    // Propose Renewable Energy project backed by crypto
+    const bond = await Tokenizer.issueRenewableBond({
+      leadId,
+      project: energyProject,
+      collateralRatio: riskProfile.requiredRatio,
+      asset: 'WAGARI_TOKEN'
+    });
+    
+    return bond;
+  }
 }`
   }
 };
