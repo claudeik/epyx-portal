@@ -52,6 +52,10 @@ const translations = {
     "services.card.credit.desc": "Sistemas de crédito colateralizados en tokens integrando oráculos Chainlink y liquidaciones automáticas basadas en ratios de salud en tiempo real.",
     "services.card.apps.title": "Aplicaciones Fintech de Última Milla",
     "services.card.apps.desc": "Interfaces de usuario ultra-fluidas y seguras para monederos digitales, transferencias instantáneas y apps de pago móvil nativas.",
+    "services.card.agro.title": "Agro Embedded Financing",
+    "services.card.agro.desc": "Integración de pasarelas de crédito, scoring satelital y billeteras multi-moneda para cadenas de suministro agrícolas y emisión de CPRs.",
+    "services.card.carbon.title": "Lead Generation & Emisiones de Carbono",
+    "services.card.carbon.desc": "Análisis de datos, monitoreo de emisiones IoT y estructuración de proyectos de energía renovable respaldados en activos criptográficos.",
 
     "cases.subtitle": "Producido en Uruguay para el Mundo",
     "cases.title": "Casos Reales en Producción",
@@ -125,6 +129,10 @@ const translations = {
     "services.card.credit.desc": "Sistemas de crédito colateralizados em criptoativos, integrando oráculos Chainlink e liquidação automática por índices de liquidez.",
     "services.card.apps.title": "Aplicativos Fintech de Última Milha",
     "services.card.apps.desc": "Desenvolvimento de aplicativos de pagamento modernos com alta segurança, conformidade e experiência de usuário de nível bancário.",
+    "services.card.agro.title": "Agro Embedded Financing",
+    "services.card.agro.desc": "Integração de gateways de crédito, scoring satelital e carteiras multi-moeda para cadeias de suprimento agrícolas e emissão de CPRs.",
+    "services.card.carbon.title": "Lead Generation & Emissões de Carbono",
+    "services.card.carbon.desc": "Análise de dados, monitoramento de emissões IoT e estruturação de projetos de energia renovável lastreados em ativos criptográficos.",
 
     "cases.subtitle": "Concebido no Uruguai para o mundo",
     "cases.title": "Casos Reais em Produção",
@@ -198,6 +206,10 @@ const translations = {
     "services.card.credit.desc": "Token-collateralized loan frameworks integrating Chainlink price feeds and automated liquidation triggers based on coverage ratios.",
     "services.card.apps.title": "Last-Mile Payment Applications",
     "services.card.apps.desc": "Modern mobile wallet architectures crafted with bank-grade security protocols, robust state management, and smooth UX.",
+    "services.card.agro.title": "Agro Embedded Financing",
+    "services.card.agro.desc": "Integration of credit gateways, satellite scoring, and multi-currency wallets for agricultural supply chains and digital CPR issuance.",
+    "services.card.carbon.title": "Lead Generation & Carbon Emissions",
+    "services.card.carbon.desc": "Data analysis, IoT emission monitoring, and structuring of renewable energy projects backed by crypto assets.",
 
     "cases.subtitle": "Conceived in Uruguay for the World",
     "cases.title": "Real Cases in Production",
