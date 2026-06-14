@@ -873,6 +873,12 @@ section {
   background: rgba(212, 175, 55, 0.08);
 }
 
+.case-card.agro .case-tag {
+  border-color: #f59e0b;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+
 .case-card p {
   color: var(--text-muted);
   font-size: 0.95rem;

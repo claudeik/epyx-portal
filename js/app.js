@@ -31,6 +31,7 @@ const translations = {
     "simulator.project.payments": "Pagos Multimoneda & Pix",
     "simulator.project.tokenization": "Tokenización de Activos & Cripto",
     "simulator.project.carbon": "Visualización Carbono & Energía",
+    "simulator.project.agro": "Agro Embedded Financing",
     "simulator.terminal.tab.logs": "Logs del Sistema",
     "simulator.terminal.tab.chat": "Conversación IA",
     "simulator.terminal.tab.code": "Código Producido",
@@ -60,6 +61,8 @@ const translations = {
     "cases.card.wagari.desc": "Wagari Carbon es una plataforma verde diseñada para certificar, trazar y comercializar créditos de carbono globales con auditoría distribuida e inmutable.",
     "cases.card.urus.desc": "Urus Stack es una suite avanzada para desarrolladores que integra flujos automatizados de especificación-código-validación en entornos distribuidos.",
     "cases.card.paraguay.desc": "Portal Paraguai unifica el ecosistema de facturación electrónica y pasarela de cobros transfronterizos para empresas del Mercosur con alta resiliencia.",
+    "cases.tag.agro": "Agro Embedded Finance",
+    "cases.card.agro.desc": "Ceres Trading implementa una arquitectura de Agro Embedded Financing, integrando motores de scoring satelital y climático con pasarelas de crédito y derivativos agrícolas.",
 
     "contact.title": "Comience un Proyecto de Alta Tecnología",
     "contact.desc": "Diseñemos la especificación de su sistema y despleguemos una squad altamente capacitada de arquitectos de software y agentes virtuales.",
@@ -101,6 +104,7 @@ const translations = {
     "simulator.project.payments": "Pagamentos Multi-moeda & Pix",
     "simulator.project.tokenization": "Tokenização de Ativos & Cripto",
     "simulator.project.carbon": "Visualização Carbono & Energia",
+    "simulator.project.agro": "Agro Embedded Financing",
     "simulator.terminal.tab.logs": "Logs do Sistema",
     "simulator.terminal.tab.chat": "Conversa de Agentes",
     "simulator.terminal.tab.code": "Código Produzido",
@@ -130,6 +134,8 @@ const translations = {
     "cases.card.wagari.desc": "O Wagari Carbon é um ecossistema sustentável para certificação, rastreamento e comercialização de créditos de carbono com transparência distribuída.",
     "cases.card.urus.desc": "Urus Stack é uma infraestrutura de desenvolvimento moderna que automatiza o ciclo completo de spec, código e validação por múltiplos agentes de IA.",
     "cases.card.paraguay.desc": "O Portal Paraguai é uma plataforma altamente estável para faturamento eletrônico e conexões financeiras multi-moeda na América Latina.",
+    "cases.tag.agro": "Agro Embedded Finance",
+    "cases.card.agro.desc": "Ceres Trading implementa uma arquitetura de Agro Embedded Financing, integrando motores de scoring de satélite e clima com gateways de crédito e derivativos agrícolas.",
 
     "contact.title": "Comece Seu Projeto de Alta Tecnologia",
     "contact.desc": "Desenhe as especificações do seu sistema e implante uma squad especialista de engenheiros e agentes de IA dedicados.",
@@ -171,6 +177,7 @@ const translations = {
     "simulator.project.payments": "Multi-Currency Payments & Pix",
     "simulator.project.tokenization": "Asset Tokenization & Crypto",
     "simulator.project.carbon": "Carbon Data & Renewable Energy",
+    "simulator.project.agro": "Agro Embedded Financing",
     "simulator.terminal.tab.logs": "System Logs",
     "simulator.terminal.tab.chat": "Agent Conversation",
     "simulator.terminal.tab.code": "Generated Code",
@@ -200,6 +207,8 @@ const translations = {
     "cases.card.wagari.desc": "Wagari Carbon is a green ledger platform engineered to audit, trace, and trade global carbon offsets with distributed, tamper-proof security.",
     "cases.card.urus.desc": "Urus Stack is an advanced developer tool suite automating specification-to-code pipelines across multi-agent virtual deployments.",
     "cases.card.paraguay.desc": "Portal Paraguai consolidates electronic invoicing and regional multi-currency clearing for high-performance enterprise operations.",
+    "cases.tag.agro": "Agro Embedded Finance",
+    "cases.card.agro.desc": "Ceres Trading implements an Agro Embedded Financing architecture, integrating satellite and climate scoring engines with credit gateways and agricultural derivatives.",
 
     "contact.title": "Initiate Next-Gen Engineering",
     "contact.desc": "Let's build your spec-first blueprint and deploy a dedicated squad of seasoned human architects and virtual developers.",
@@ -524,6 +533,67 @@ export class CarbonLeadEngine {
     });
     
     return bond;
+  }
+}`
+  },
+  agro: {
+    logs: [
+      "STATUS: Initiating Agro Embedded Finance Engine (Ceres Trading ref)...",
+      "SPECIFICATION: Loading spec 'spec/agro_financing_cpr.json'...",
+      "ARCHITECT: Defined constraints for IoT satellite scoring and Multi-Currency Wallet.",
+      "DEPLOYING: Deploying virtual developers (Antigravity & Claude Code)...",
+      "ANTIGRAVITY: Scaffolding Multi-Currency Wallet with real-time FX tracking: [OK]",
+      "CLAUDE CODE: Designing NDVI Satellite Scoring model for credit assessment... [COMPILING]",
+      "ANTIGRAVITY: Linking Digital CPR (Cédula de Produto Rural) smart contracts: [OK]",
+      "CLAUDE CODE: Backtesting risk profiles with Serasa + Receita Federal APIs: [OK]",
+      "VALIDATOR: Running simulation. 1500 farm producers scored. Credit limits generated.",
+      "VALIDATOR: AgroShield insurance parametric triggers validated.",
+      "COMPLETED: Agro Embedded Finance portal active.",
+      "SYSTEM: Deployment finalized in 4800ms."
+    ],
+    chat: [
+      { sender: "Architect", message: "Goal: Build an Agro Embedded Finance platform (like Ceres Trading). We need a multi-currency wallet, satellite credit scoring, and digital CPR issuance." },
+      { sender: "Antigravity", message: "I'll handle the Multi-Currency wallet. It will process USD, EUR, CNY, and BRL with real-time FX spreads." },
+      { sender: "Claude Code", message: "For the credit engine, I'll combine Serasa scoring with satellite NDVI crop data. This will dynamically adjust the credit limit for producers." },
+      { sender: "Antigravity", message: "Excellent. Let's also implement the Barter calculator so producers can trade urea for future soybeans using digital CPRs." },
+      { sender: "Claude Code", message: "Barter endpoints are live. I'm adding AgroShield integration to issue insurance policies automatically based on vessel IoT checkpoints." },
+      { sender: "Validator", message: "All systems go. The FX ticker is streaming, the CPRs are cryptographically signed, and the credit engine is correctly evaluating risk." }
+    ],
+    code: `// core/agro_credit_engine.js
+import { SatelliteScoring } from '@ceres/ndvi-score';
+import { CPRGenerator } from '../blockchain/cpr.js';
+import { FXWallet } from '../finance/fx-wallet.js';
+
+export class AgroEmbeddedFinance {
+  constructor(producerId) {
+    this.producerId = producerId;
+    this.scoring = new SatelliteScoring();
+    this.wallet = new FXWallet();
+  }
+
+  async calculateCreditLimit() {
+    const ndviScore = await this.scoring.analyzeCropYield(this.producerId);
+    const serasaScore = await this.fetchSerasaScore(this.producerId);
+    
+    let baseLimit = 500000;
+    if (ndviScore > 85 && serasaScore > 750) {
+      baseLimit += 2000000; // Premium limit
+    }
+    return baseLimit;
+  }
+
+  async issueBarterCPR(ureaVolume, grainType) {
+    const equivalentGrain = await this.wallet.calculateBarter(ureaVolume, grainType);
+    
+    // Issue Digital CPR (Cédula de Produto Rural)
+    const cpr = await CPRGenerator.issueDigitalCPR({
+      producerId: this.producerId,
+      grainType,
+      volume: equivalentGrain,
+      dueDate: '2027-03-01'
+    });
+    
+    return cpr;
   }
 }`
   }
