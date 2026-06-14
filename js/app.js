@@ -783,71 +783,24 @@ function runSimulation(projectKey) {
 }
 
 // ============================================================
-// Zoho CRM Integration — Real Lead Creation via OAuth 2.0
+// Zoho CRM Integration — via Vercel Serverless Proxy
+// (evita CORS: o browser chama /api/create-lead no mesmo dominio)
 // ============================================================
 
-// Step 1: Exchange refresh_token for a fresh access_token
-async function getZohoAccessToken() {
-  const params = new URLSearchParams({
-    refresh_token: ZOHO_CONFIG.refreshToken,
-    client_id:     ZOHO_CONFIG.clientId,
-    client_secret: ZOHO_CONFIG.clientSecret,
-    grant_type:    'refresh_token',
-  });
-
-  const res = await fetch(`${ZOHO_CONFIG.accountsUrl}/oauth/v2/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString(),
-  });
-
-  if (!res.ok) throw new Error(`Token exchange failed: ${res.status}`);
-  const data = await res.json();
-  if (!data.access_token) throw new Error(data.error || 'No access_token returned');
-  return data.access_token;
-}
-
-// Step 2: Create Lead in Zoho CRM
 async function createZohoLead({ name, email, message }) {
-  const accessToken = await getZohoAccessToken();
-
-  // Split name into First / Last for Zoho CRM fields
-  const nameParts = name.trim().split(' ');
-  const lastName  = nameParts.length > 1 ? nameParts.slice(1).join(' ') : nameParts[0];
-  const firstName = nameParts.length > 1 ? nameParts[0] : '';
-
-  const leadPayload = {
-    data: [
-      {
-        Last_Name:   lastName,
-        First_Name:  firstName,
-        Email:       email,
-        Description: message,
-        Lead_Source: 'Web Site',
-        Company:     name, // Company field = full name/company from form
-      },
-    ],
-  };
-
-  const res = await fetch(`${ZOHO_CONFIG.apiDomain}/crm/v7/Leads`, {
+  const res = await fetch('/api/create-lead', {
     method:  'POST',
-    headers: {
-      'Authorization': `Zoho-oauthtoken ${accessToken}`,
-      'Content-Type':  'application/json',
-    },
-    body: JSON.stringify(leadPayload),
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ name, email, message }),
   });
 
-  if (!res.ok) throw new Error(`CRM API error: ${res.status}`);
-  const result = await res.json();
+  const data = await res.json();
 
-  // Check for CRM-level errors
-  const record = result.data?.[0];
-  if (record && record.status === 'error') {
-    throw new Error(record.message || 'CRM rejected the lead');
+  if (!res.ok || data.error) {
+    throw new Error(data.error || `Server error: ${res.status}`);
   }
 
-  return result;
+  return data;
 }
 
 // Contact Form — real Zoho CRM submission handler
