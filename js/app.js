@@ -1005,10 +1005,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (toast) {
         toast.classList.add('visible');
 
-        // Auto-dismiss after 6 seconds
+        // Auto-dismiss after 3 seconds and scroll to hero
         setTimeout(() => {
           toast.classList.remove('visible');
-        }, 6000);
+          // Smooth scroll to hero section
+          const heroSection = document.getElementById('home');
+          if (heroSection) {
+            heroSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 3000);
       }
     }, 600);
   }
