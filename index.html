@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" translate="no">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,8 @@
   <!-- Primary Meta Tags -->
   <meta name="title" content="EPYX SAS Uruguay - Plataformas de Pago y Automatización con IA">
   <meta name="description" content="Concebimos y producimos plataformas de pago multimoneda, automatización con IA y squads de desarrollo de última generación integrados con programadores virtuales. Spec-first como core de nuestra metodología.">
+  <!-- Disable browser translation suggestion -->
+  <meta name="google" content="notranslate">
   
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
@@ -393,6 +395,7 @@
                 method="POST"
                 onSubmit="javascript:document.charset='UTF-8'; return checkMandatory7458796000000684101()"
                 accept-charset="UTF-8"
+                target="zoho-crm-frame"
                 class="epyx-zoho-form">
 
             <input type="text" style="display:none;" name="xnQsjsdp" value="d6ce284fab976dcf8857b9cef4e5cb5c9de73f528961c9e041bb1382e91c79f6">
@@ -462,6 +465,26 @@
             </div>
 
           </form>
+
+          <!-- Hidden iframe receives Zoho POST response (keeps user on page) -->
+          <iframe name="zoho-crm-frame" id="zoho-crm-frame" style="display:none;" title="Zoho CRM Form Target" aria-hidden="true"></iframe>
+
+          <!-- In-page success overlay (shown by JS after submit) -->
+          <div id="zoho-success-overlay" class="zoho-success-overlay" style="display:none;" aria-live="polite">
+            <div class="zoho-success-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="40" height="40">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="8 12 11 15 16 9"/>
+              </svg>
+            </div>
+            <h3 class="zoho-success-title">Contato registrado com sucesso!</h3>
+            <p class="zoho-success-sub">Nossa equipe retornará em breve.</p>
+            <div class="zoho-success-countdown">
+              <div class="zoho-countdown-bar"></div>
+              <span class="zoho-countdown-text">Voltando à página inicial em <strong id="zoho-countdown-num">3</strong>s...</span>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

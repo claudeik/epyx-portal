@@ -1498,3 +1498,86 @@ footer {
     transform: translateY(0);
   }
 }
+
+/* ============================================================
+   Zoho In-Page Success Overlay
+   ============================================================ */
+
+.zoho-success-overlay {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  padding: 40px 20px;
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 280px;
+}
+
+.zoho-success-overlay.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.zoho-success-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.1);
+  border: 2px solid rgba(16, 185, 129, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  stroke: #10b981;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+  50%       { box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); }
+}
+
+.zoho-success-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.zoho-success-sub {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.zoho-success-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+}
+
+.zoho-countdown-bar {
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-primary), var(--blue-light));
+  border-radius: 2px;
+  transition: width 3s linear;
+}
+
+.zoho-countdown-text {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-family: var(--font-code);
+}
+
+.zoho-countdown-text strong {
+  color: var(--gold-primary);
+}

@@ -987,15 +987,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fadeElements.forEach(el => observer.observe(el));
 
-  // 7. Contact form validation
+  // 7. Contact form validation (legacy — kept for compatibility)
   setupContactForm();
 
-  // 8. Detect Zoho form redirect ?lead=sent → show success toast & scroll to top
+  // 8. Zoho WebToContacts in-page interception
+  setupZohoFormInterception();
+
+  // 9. Detect Zoho form redirect ?lead=sent (fallback for direct navigation)
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('lead') === 'sent') {
-    // Clean URL immediately (no reload)
     window.history.replaceState({}, document.title, window.location.pathname);
-
     // Scroll smoothly to top / hero section
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -1018,3 +1019,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 600);
   }
 });
+
+// ============================================================
+// Zoho Form In-Page Interception
+// Posts to hidden iframe → shows success overlay → scrolls to hero
+// ============================================================
+function setupZohoFormInterception() {
+  const form      = document.getElementById('webform7458796000000684101');
+  const overlay   = document.getElementById('zoho-success-overlay');
+  const formWrap  = document.querySelector('.zoho-form-wrapper');
+  if (!form || !overlay) return;
+
+  form.addEventListener('submit', (e) => {
+    // Validate mandatory field independently
+    const lastName = document.getElementById('Last_Name');
+    if (!lastName || !lastName.value.trim()) return; // Zoho's handler shows alert
+
+    // Form is valid — let it POST to the hidden iframe (don't preventDefault)
+    // Show success overlay after a tick to ensure POST fires first
+    setTimeout(() => {
+      // Hide form, show overlay with smooth transition
+      form.style.transition = 'opacity 0.3s ease';
+      form.style.opacity = '0';
+
+      setTimeout(() => {
+        form.style.display = 'none';
+        overlay.style.display = 'flex';
+        // Trigger CSS animation
+        requestAnimationFrame(() => overlay.classList.add('visible'));
+
+        // Countdown: 3 → 2 → 1 → scroll to hero
+        let remaining = 3;
+        const numEl  = document.getElementById('zoho-countdown-num');
+        const barEl  = overlay.querySelector('.zoho-countdown-bar');
+
+        // Animate progress bar
+        if (barEl) {
+          barEl.style.transition = 'width 3s linear';
+          requestAnimationFrame(() => { barEl.style.width = '0%'; });
+        }
+
+        const tick = setInterval(() => {
+          remaining--;
+          if (numEl) numEl.textContent = remaining;
+          if (remaining <= 0) {
+            clearInterval(tick);
+            // Scroll to hero
+            const hero = document.getElementById('home');
+            if (hero) hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 1000);
+      }, 300);
+    }, 150);
+  });
+}
