@@ -1,0 +1,7 @@
+# MCP local config (contém credenciais — não versionar)
+.mcp.json
+
+# Tokens / segredos
+*.zoho_tokens.json
+.env
+.env.*
