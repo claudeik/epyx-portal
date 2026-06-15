@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="pt-BR" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>EPYX BTC Auto — Simulador de Financiamento com Garantia em Bitcoin</title>
+  <meta name="description" content="Simule financiamento de veículos com garantia em Bitcoin. Calcule parcelas, colateral necessário e gere o mockup do contrato.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap">
+  <style>
+    /* ── Design Tokens ──────────────────────────────────── */
+    :root {
+      --bg:          #07090f;
+      --bg-card:     rgba(8,12,28,0.6);
+      --bg-terminal: rgba(4,6,14,0.9);
+      --border:      rgba(255,255,255,0.07);
+      --border-gold: rgba(197,160,89,0.3);
+      --border-blue: rgba(59,130,246,0.25);
+      --gold:        #C5A059;
+      --gold-light:  #E6D0A1;
+      --gold-dark:   #8A6D3B;
+      --gold-glow:   rgba(197,160,89,0.35);
+      --blue:        #3b82f6;
+      --blue-glow:   rgba(59,130,246,0.4);
+      --green:       #10b981;
+      --red:         #f87171;
+      --orange:      #f59e0b;
+      --text:        #f8fafc;
+      --muted:       #94a3b8;
+      --font-h:      'Outfit', sans-serif;
+      --font-b:      'Inter', sans-serif;
+      --font-c:      'Fira Code', monospace;
+      --blur:        blur(20px);
+      --ease:        cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* ── Reset ─────────────────────────────────────────── */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--gold-dark) var(--bg)}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:3px}
+    body{font-family:var(--font-b);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+
+    /* ── Animated BG ────────────────────────────────────── */
+    .bg-orbs{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+    .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:0.12;animation:float 20s ease-in-out infinite}
+    .orb-1{width:600px;height:600px;background:radial-gradient(circle,#C5A059,transparent);top:-200px;left:-100px;animation-delay:0s}
+    .orb-2{width:500px;height:500px;background:radial-gradient(circle,#3b82f6,transparent);bottom:-150px;right:-100px;animation-delay:-7s}
+    .orb-3{width:400px;height:400px;background:radial-gradient(circle,#8b5cf6,transparent);top:40%;left:50%;animation-delay:-14s;opacity:0.07}
+    @keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-40px) scale(1.05)}}
+
+    /* ── Header / Nav ───────────────────────────────────── */
+    header{
+      position:sticky;top:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 6%;height:72px;
+      background:rgba(7,9,15,0.75);
+      backdrop-filter:var(--blur);
+      border-bottom:1px solid var(--border);
+    }
+    .logo{
+      font-family:var(--font-h);font-size:1.35rem;font-weight:800;
+      letter-spacing:1.5px;text-transform:uppercase;
+      color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;
+    }
+    .logo span{color:var(--gold);text-shadow:0 0 12px var(--gold-glow)}
+    .logo-badge{
+      font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+      background:rgba(197,160,89,0.12);border:1px solid var(--border-gold);
+      color:var(--gold-light);padding:3px 10px;border-radius:20px;
+    }
+    .header-back{
+      display:flex;align-items:center;gap:6px;
+      color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;
+      transition:color .2s;padding:8px 16px;border:1px solid var(--border);
+      border-radius:20px;backdrop-filter:var(--blur);
+    }
+    .header-back:hover{color:var(--text);border-color:var(--border-gold)}
+
+    /* ── Page Hero ──────────────────────────────────────── */
+    .page-hero{
+      text-align:center;padding:70px 6% 50px;
+      background:linear-gradient(180deg,rgba(197,160,89,0.04) 0%,transparent 100%);
+      border-bottom:1px solid var(--border);
+    }
+    .hero-tag{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(197,160,89,0.08);border:1px solid var(--border-gold);
+      padding:6px 18px;border-radius:30px;
+      font-family:var(--font-h);font-size:0.75rem;font-weight:700;
+      letter-spacing:2px;text-transform:uppercase;color:var(--gold-light);
+      margin-bottom:20px;
+    }
+    .hero-dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);animation:blink 2s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+    .page-hero h1{
+      font-family:var(--font-h);font-size:clamp(2rem,5vw,3.4rem);font-weight:800;
+      line-height:1.15;letter-spacing:-1px;margin-bottom:16px;
+      background:linear-gradient(135deg,var(--text) 40%,var(--gold-light) 70%,var(--blue));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .page-hero p{color:var(--muted);font-size:1.05rem;max-width:600px;margin:0 auto 30px}
+    .btc-live{
+      display:inline-flex;align-items:center;gap:10px;
+      background:var(--bg-card);backdrop-filter:var(--blur);
+      border:1px solid var(--border-gold);border-radius:40px;
+      padding:10px 22px;font-family:var(--font-c);font-size:0.9rem;
+    }
+    .btc-live .label{color:var(--muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:1px}
+    .btc-price-val{color:var(--gold);font-weight:600;font-size:1rem}
+    .btc-brl{color:var(--muted);font-size:0.82rem}
+    .price-loading{color:var(--muted);font-size:0.85rem;animation:pulse-text 1.5s infinite}
+    @keyframes pulse-text{0%,100%{opacity:1}50%{opacity:0.4}}
+
+    /* ── Main Layout ─────────────────────────────────────── */
+    main{max-width:1300px;margin:0 auto;padding:50px 6% 80px;display:flex;flex-direction:column;gap:40px}
+
+    /* ── Simulator Grid ──────────────────────────────────── */
+    .sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start}
+
+    /* ── Glass Card ──────────────────────────────────────── */
+    .card{
+      background:var(--bg-card);backdrop-filter:var(--blur);
+      border:1px solid var(--border);border-radius:20px;padding:32px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    }
+    .card-title{
+      display:flex;align-items:center;gap:10px;
+      font-family:var(--font-h);font-size:1rem;font-weight:700;
+      color:var(--gold-light);letter-spacing:0.5px;margin-bottom:24px;
+      padding-bottom:16px;border-bottom:1px solid var(--border);
+    }
+    .card-title svg{stroke:var(--gold);filter:drop-shadow(0 0 6px var(--gold-glow))}
+    .card-title .badge{
+      margin-left:auto;font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+      background:rgba(59,130,246,0.1);border:1px solid var(--border-blue);
+      color:var(--blue);padding:3px 10px;border-radius:12px;
+    }
+
+    /* ── Form Elements ───────────────────────────────────── */
+    .form-section-label{
+      font-family:var(--font-h);font-size:0.7rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:2px;color:var(--muted);
+      margin:20px 0 12px;display:flex;align-items:center;gap:8px;
+    }
+    .form-section-label::before{content:'';flex:1;height:1px;background:var(--border)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+    .form-group label{
+      font-family:var(--font-h);font-size:0.75rem;font-weight:600;
+      text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);
+    }
+    .form-group input,.form-group select{
+      background:rgba(255,255,255,0.03);border:1px solid var(--border);
+      border-radius:10px;padding:12px 16px;color:var(--text);
+      font-family:var(--font-b);font-size:0.95rem;width:100%;
+      outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;
+    }
+    .form-group input:focus,.form-group select:focus{
+      border-color:var(--gold);background:rgba(197,160,89,0.05);
+      box-shadow:0 0 0 3px rgba(197,160,89,0.1);
+    }
+    .form-group input::placeholder{color:rgba(148,163,184,0.4)}
+    .input-prefix{position:relative}
+    .input-prefix span{
+      position:absolute;left:14px;top:50%;transform:translateY(-50%);
+      color:var(--gold);font-family:var(--font-c);font-size:0.85rem;pointer-events:none;
+    }
+    .input-prefix input{padding-left:42px}
+    .input-suffix span{
+      position:absolute;right:14px;top:50%;transform:translateY(-50%);
+      color:var(--muted);font-family:var(--font-c);font-size:0.8rem;pointer-events:none;
+    }
+    .input-suffix input{padding-right:52px}
+    .range-wrap{display:flex;flex-direction:column;gap:6px}
+    .range-wrap input[type=range]{
+      -webkit-appearance:none;width:100%;height:4px;
+      background:linear-gradient(90deg,var(--gold) var(--pct,0%),rgba(255,255,255,0.1) var(--pct,0%));
+      border-radius:2px;outline:none;border:none;padding:0;cursor:pointer;
+    }
+    .range-wrap input[type=range]::-webkit-slider-thumb{
+      -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+      background:var(--gold);cursor:pointer;border:2px solid var(--bg);
+      box-shadow:0 0 8px var(--gold-glow);
+    }
+    .range-labels{display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);font-family:var(--font-c)}
+    .range-value{
+      font-family:var(--font-c);font-size:0.9rem;color:var(--gold);font-weight:600;
+      text-align:right;
+    }
+
+    /* ── BTC Price Manual toggle ─────────────────────────── */
+    .btc-source{
+      display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--muted);
+      margin-bottom:12px;
+    }
+    .toggle{position:relative;width:36px;height:20px;cursor:pointer}
+    .toggle input{display:none}
+    .toggle-track{
+      width:100%;height:100%;background:rgba(255,255,255,0.1);
+      border-radius:10px;transition:.2s;border:1px solid var(--border);
+    }
+    .toggle input:checked + .toggle-track{background:rgba(197,160,89,0.3);border-color:var(--gold)}
+    .toggle-thumb{
+      position:absolute;top:3px;left:3px;width:14px;height:14px;
+      background:var(--muted);border-radius:50%;transition:.2s;
+    }
+    .toggle input:checked ~ .toggle-thumb{left:19px;background:var(--gold)}
+
+    /* ── Simulate Button ──────────────────────────────────── */
+    .btn-simulate{
+      width:100%;padding:16px;border-radius:12px;border:none;
+      background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dark) 100%);
+      color:#0f172a;font-family:var(--font-h);font-size:1rem;font-weight:700;
+      cursor:pointer;transition:all .3s var(--ease);
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      margin-top:8px;letter-spacing:0.5px;
+      box-shadow:0 4px 20px var(--gold-glow);
+    }
+    .btn-simulate:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,175,55,0.5);background:linear-gradient(135deg,var(--gold-light),var(--gold))}
+    .btn-simulate:active{transform:translateY(0)}
+
+    /* ── Results Panel ───────────────────────────────────── */
+    .results-panel{display:flex;flex-direction:column;gap:20px}
+    .result-block{
+      background:rgba(255,255,255,0.02);border:1px solid var(--border);
+      border-radius:14px;padding:20px 24px;
+      transition:border-color .3s,box-shadow .3s;
+    }
+    .result-block.highlight{
+      border-color:var(--border-gold);
+      box-shadow:0 0 20px rgba(197,160,89,0.08);
+    }
+    .result-block.btc-block{
+      border-color:rgba(247,147,26,0.3);
+      background:rgba(247,147,26,0.03);
+    }
+    .result-block.risk-block{
+      border-color:rgba(248,113,113,0.3);
+      background:rgba(248,113,113,0.03);
+    }
+    .result-label{
+      font-family:var(--font-h);font-size:0.72rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);
+      margin-bottom:6px;
+    }
+    .result-value{
+      font-family:var(--font-c);font-size:1.6rem;font-weight:600;
+      color:var(--text);line-height:1.2;
+    }
+    .result-value.gold{color:var(--gold)}
+    .result-value.btc-color{color:#f7921a}
+    .result-value.red{color:var(--red)}
+    .result-sub{font-size:0.78rem;color:var(--muted);margin-top:4px;font-family:var(--font-c)}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+    /* ── Summary Bar ─────────────────────────────────────── */
+    .summary-bar{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+      background:rgba(255,255,255,0.02);border:1px solid var(--border-gold);
+      border-radius:16px;padding:20px 24px;
+    }
+    .sum-item{text-align:center}
+    .sum-label{font-size:0.7rem;font-family:var(--font-h);font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+    .sum-val{font-family:var(--font-c);font-size:1.05rem;color:var(--text);font-weight:600}
+    .sum-val.gold{color:var(--gold)}
+    .sum-val.btc{color:#f7921a}
+
+    /* ── LTV Meter ───────────────────────────────────────── */
+    .ltv-meter{margin-top:10px}
+    .ltv-bar-wrap{background:rgba(255,255,255,0.06);border-radius:4px;height:8px;overflow:hidden;margin-top:8px}
+    .ltv-bar{height:100%;border-radius:4px;transition:width .6s var(--ease);background:linear-gradient(90deg,var(--green),var(--gold))}
+    .ltv-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-top:4px;font-family:var(--font-c)}
+
+    /* ── Placeholder state ───────────────────────────────── */
+    .results-placeholder{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:16px;padding:50px 20px;text-align:center;color:var(--muted);
+      border:2px dashed var(--border);border-radius:16px;min-height:300px;
+    }
+    .results-placeholder svg{stroke:var(--muted);opacity:0.3;width:64px;height:64px}
+    .results-placeholder p{font-size:0.9rem}
+
+    /* ── Contract Section ────────────────────────────────── */
+    .contract-section{border-top:1px solid var(--border);padding-top:40px}
+    .section-heading{
+      font-family:var(--font-h);font-size:1.8rem;font-weight:800;
+      margin-bottom:8px;
+      background:linear-gradient(135deg,var(--text) 60%,var(--gold-light));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .section-sub{color:var(--muted);font-size:0.95rem;margin-bottom:32px}
+
+    .contract-actions{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .btn-contract{
+      display:flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;
+      font-family:var(--font-h);font-size:0.9rem;font-weight:700;cursor:pointer;
+      transition:all .2s;border:1px solid var(--border-gold);
+      background:rgba(197,160,89,0.08);color:var(--gold);
+    }
+    .btn-contract:hover{background:rgba(197,160,89,0.15);transform:translateY(-1px)}
+    .btn-print{
+      background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.3);color:var(--green);
+    }
+    .btn-print:hover{background:rgba(16,185,129,0.15)}
+
+    /* ── Contract Document ───────────────────────────────── */
+    .contract-doc{
+      background:rgba(255,255,255,0.02);border:1px solid var(--border-gold);
+      border-radius:20px;padding:0;overflow:hidden;
+    }
+    .contract-header-bar{
+      background:linear-gradient(135deg,rgba(197,160,89,0.12),rgba(59,130,246,0.08));
+      border-bottom:1px solid var(--border-gold);
+      padding:28px 40px;display:flex;align-items:center;justify-content:space-between;
+    }
+    .contract-logo{font-family:var(--font-h);font-size:1.6rem;font-weight:800;letter-spacing:2px}
+    .contract-logo span{color:var(--gold)}
+    .contract-id{font-family:var(--font-c);font-size:0.75rem;color:var(--muted);text-align:right}
+    .contract-id strong{display:block;color:var(--gold);font-size:0.85rem}
+
+    .contract-body{padding:40px}
+    .contract-title{
+      text-align:center;font-family:var(--font-h);font-size:1.15rem;font-weight:800;
+      text-transform:uppercase;letter-spacing:2px;color:var(--text);
+      margin-bottom:6px;
+    }
+    .contract-subtitle{text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:32px;font-family:var(--font-c)}
+    .contract-divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+    .parties-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+    .party-box{
+      background:rgba(255,255,255,0.02);border:1px solid var(--border);
+      border-radius:12px;padding:18px 20px;
+    }
+    .party-tag{
+      font-family:var(--font-h);font-size:0.65rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin-bottom:8px;
+    }
+    .party-name{font-weight:700;font-size:1rem;margin-bottom:4px}
+    .party-detail{font-size:0.8rem;color:var(--muted)}
+
+    .clause{margin-bottom:24px}
+    .clause-title{
+      font-family:var(--font-h);font-weight:700;font-size:0.9rem;
+      color:var(--gold-light);margin-bottom:10px;display:flex;align-items:center;gap:8px;
+    }
+    .clause-num{
+      width:24px;height:24px;border-radius:50%;background:rgba(197,160,89,0.15);
+      border:1px solid var(--border-gold);display:flex;align-items:center;justify-content:center;
+      font-family:var(--font-c);font-size:0.7rem;color:var(--gold);flex-shrink:0;
+    }
+    .clause p{font-size:0.88rem;color:rgba(248,250,252,0.8);line-height:1.75}
+    .clause-table{
+      width:100%;border-collapse:collapse;margin-top:12px;font-size:0.85rem;
+    }
+    .clause-table th{
+      background:rgba(197,160,89,0.08);border:1px solid var(--border);
+      padding:10px 14px;text-align:left;font-family:var(--font-h);font-size:0.7rem;
+      font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);
+    }
+    .clause-table td{
+      border:1px solid var(--border);padding:10px 14px;
+      color:rgba(248,250,252,0.85);font-family:var(--font-c);font-size:0.82rem;
+    }
+    .clause-table tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+
+    .smart-contract-box{
+      background:var(--bg-terminal);border:1px solid rgba(59,130,246,0.3);
+      border-radius:12px;padding:16px 20px;margin-top:12px;
+      font-family:var(--font-c);font-size:0.78rem;
+    }
+    .sc-label{color:var(--muted);font-size:0.68rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+    .sc-address{color:var(--blue);word-break:break-all;line-height:1.6}
+    .sc-hash{color:rgba(59,130,246,0.5)}
+
+    .signatures-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:32px}
+    .sig-box{text-align:center}
+    .sig-line{
+      border-top:1px solid var(--border-gold);margin-top:50px;padding-top:10px;
+      font-size:0.78rem;color:var(--muted);font-family:var(--font-c);
+    }
+    .sig-name{color:var(--text);font-weight:600;font-size:0.85rem}
+    .sig-role{color:var(--muted);font-size:0.75rem}
+
+    .contract-footer-bar{
+      background:rgba(255,255,255,0.02);border-top:1px solid var(--border);
+      padding:16px 40px;display:flex;justify-content:space-between;align-items:center;
+      font-family:var(--font-c);font-size:0.72rem;color:var(--muted);
+    }
+    .contract-status{
+      display:flex;align-items:center;gap:6px;
+      background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);
+      border-radius:20px;padding:4px 14px;color:var(--green);font-size:0.72rem;
+    }
+    .status-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+
+    /* ── Watermark (print hidden) ────────────────────────── */
+    .watermark{
+      text-align:center;padding:16px;font-family:var(--font-h);font-size:0.75rem;
+      color:rgba(197,160,89,0.2);letter-spacing:3px;text-transform:uppercase;
+    }
+
+    /* ── Print Styles ────────────────────────────────────── */
+    @media print{
+      .bg-orbs,.header-back,header,.contract-actions,
+      .sim-grid,.summary-bar,.page-hero,.watermark{display:none!important}
+      body{background:#fff;color:#000}
+      .contract-doc{border:2px solid #c5a059;border-radius:0}
+      .contract-header-bar,.contract-body,.contract-footer-bar{background:#fff}
+      .card-title,.clause-title,.party-tag{color:#8a6d3b}
+      .clause p,.clause-table td{color:#222}
+      .contract-title{color:#000}
+      .party-box{border:1px solid #ddd}
+      .smart-contract-box{background:#f5f5f5;border:1px solid #ddd}
+      .sc-address{color:#1a56db}
+      .sig-line{border-top-color:#c5a059}
+      .contract-section{padding-top:0;border-top:none}
+      main{padding:0}
+      .contract-footer-bar{border-top:1px solid #ddd}
+      .section-heading,.section-sub,.contract-actions{display:none!important}
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media(max-width:900px){
+      .sim-grid{grid-template-columns:1fr}
+      .parties-grid{grid-template-columns:1fr}
+      .signatures-grid{grid-template-columns:1fr}
+      .summary-bar{grid-template-columns:1fr 1fr}
+      .contract-header-bar{flex-direction:column;gap:12px;text-align:center}
+      .contract-body{padding:24px}
+      .contract-footer-bar{flex-direction:column;gap:8px}
+    }
+    @media(max-width:560px){
+      .form-row{grid-template-columns:1fr}
+      .result-grid{grid-template-columns:1fr}
+      .summary-bar{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header>
+    <a href="/" class="logo">EPYX<span>.</span> <span class="logo-badge">BTC AUTO</span></a>
+    <a href="/" class="header-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"/></svg>
+      Voltar ao Portal
+    </a>
+  </header>
+
+  <!-- ── Hero ───────────────────────────────────────────── -->
+  <div class="page-hero">
+    <div class="hero-tag"><span class="hero-dot"></span> Produto Exclusivo EPYX</div>
+    <h1>Financiamento de Veículos<br>com Garantia em Bitcoin</h1>
+    <p>Simule seu financiamento, calcule o colateral em BTC necessário e gere o mockup do contrato operacional.</p>
+    <div class="btc-live" id="btc-ticker">
+      <span class="label">BTC</span>
+      <span class="btc-price-val" id="btc-usd">—</span>
+      <span class="btc-brl" id="btc-brl">— BRL</span>
+    </div>
+  </div>
+
+  <!-- ── Main ───────────────────────────────────────────── -->
+  <main>
+
+    <!-- ── Summary Bar (shown after simulation) ─────────── -->
+    <div class="summary-bar" id="summary-bar" style="display:none">
+      <div class="sum-item"><div class="sum-label">Valor Financiado</div><div class="sum-val gold" id="sum-financed">—</div></div>
+      <div class="sum-item"><div class="sum-label">Parcela Mensal</div><div class="sum-val" id="sum-pmt">—</div></div>
+      <div class="sum-item"><div class="sum-label">Garantia em BTC</div><div class="sum-val btc" id="sum-btc">— BTC</div></div>
+      <div class="sum-item"><div class="sum-label">Prazo</div><div class="sum-val" id="sum-term">—</div></div>
+    </div>
+
+    <!-- ── Simulator Grid ────────────────────────────────── -->
+    <div class="sim-grid">
+
+      <!-- LEFT: Input Form -->
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          Parâmetros da Simulação
+          <span class="badge">Tempo Real</span>
+        </div>
+
+        <!-- Veículo -->
+        <div class="form-section-label">🚗 Veículo</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Marca</label>
+            <input type="text" id="car-brand" placeholder="ex: Toyota" value="Toyota">
+          </div>
+          <div class="form-group">
+            <label>Modelo</label>
+            <input type="text" id="car-model" placeholder="ex: Corolla" value="Corolla Cross">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ano</label>
+            <select id="car-year">
+              <option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Valor do Veículo (R$)</label>
+            <div class="input-prefix" style="position:relative">
+              <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gold);font-family:var(--font-c);font-size:0.85rem">R$</span>
+              <input type="number" id="car-value" value="120000" min="10000" max="1000000" style="padding-left:42px">
+            </div>
+          </div>
+        </div>
+
+        <!-- Financiamento -->
+        <div class="form-section-label">💰 Financiamento</div>
+
+        <div class="form-group">
+          <label>Entrada — <span id="down-pct-label" style="color:var(--gold)">20%</span> = <span id="down-value-label" style="color:var(--gold-light)">R$ 24.000</span></label>
+          <div class="range-wrap">
+            <input type="range" id="down-pct" min="10" max="50" value="20" step="5">
+            <div class="range-labels"><span>10%</span><span>30%</span><span>50%</span></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Prazo — <span id="term-label" style="color:var(--gold)">48 meses</span></label>
+          <div class="range-wrap">
+            <input type="range" id="term" min="12" max="72" value="48" step="12">
+            <div class="range-labels"><span>12m</span><span>36m</span><span>48m</span><span>60m</span><span>72m</span></div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Taxa de Juros (% a.m.)</label>
+            <div style="position:relative">
+              <input type="number" id="rate" value="1.49" min="0.5" max="5" step="0.01" style="padding-right:50px">
+              <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-family:var(--font-c);font-size:0.8rem">% a.m</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Taxa IOF (%)</label>
+            <div style="position:relative">
+              <input type="number" id="iof" value="0.38" min="0" max="2" step="0.01" style="padding-right:42px">
+              <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-family:var(--font-c);font-size:0.8rem">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Garantia BTC -->
+        <div class="form-section-label">₿ Garantia em Bitcoin</div>
+
+        <div class="btc-source">
+          <label class="toggle">
+            <input type="checkbox" id="manual-btc-toggle">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+          <span id="btc-source-label">Usar preço ao vivo (CoinGecko)</span>
+        </div>
+
+        <div class="form-group" id="manual-btc-group" style="display:none">
+          <label>Preço BTC Manual (BRL)</label>
+          <div style="position:relative">
+            <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#f7921a;font-family:var(--font-c);font-size:0.85rem">₿</span>
+            <input type="number" id="btc-manual" value="600000" style="padding-left:42px">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>LTV Ratio (Loan-to-Value) — <span id="ltv-label" style="color:var(--gold)">66.7%</span></label>
+          <div class="range-wrap">
+            <input type="range" id="ltv-ratio" min="50" max="80" value="67" step="1">
+            <div class="range-labels"><span>50% (Conservador)</span><span>67% (Padrão)</span><span>80% (Agressivo)</span></div>
+          </div>
+        </div>
+
+        <button class="btn-simulate" onclick="runSimulation()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Calcular Simulação Completa
+        </button>
+      </div>
+
+      <!-- RIGHT: Results -->
+      <div class="results-panel" id="results-panel">
+
+        <!-- Placeholder -->
+        <div class="results-placeholder" id="results-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p>Preencha os parâmetros ao lado e clique em <strong style="color:var(--gold)">Calcular Simulação</strong> para visualizar os resultados.</p>
+        </div>
+
+        <!-- Results (hidden initially) -->
+        <div id="results-content" style="display:none;display:flex;flex-direction:column;gap:16px">
+
+          <!-- Financing Results -->
+          <div class="card" style="padding:24px">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              Financiamento
+            </div>
+            <div class="result-grid">
+              <div class="result-block highlight">
+                <div class="result-label">Parcela Mensal</div>
+                <div class="result-value gold" id="res-pmt">—</div>
+                <div class="result-sub" id="res-pmt-sub">—</div>
+              </div>
+              <div class="result-block">
+                <div class="result-label">Valor Financiado</div>
+                <div class="result-value" id="res-principal">—</div>
+                <div class="result-sub" id="res-down">Entrada: —</div>
+              </div>
+              <div class="result-block">
+                <div class="result-label">Total a Pagar</div>
+                <div class="result-value" id="res-total">—</div>
+                <div class="result-sub" id="res-total-sub">—</div>
+              </div>
+              <div class="result-block">
+                <div class="result-label">Custo do Crédito</div>
+                <div class="result-value" id="res-cost">—</div>
+                <div class="result-sub" id="res-cost-sub">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BTC Collateral Results -->
+          <div class="card" style="padding:24px">
+            <div class="card-title" style="color:#f7921a">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#f7921a" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M9.5 8H13a2.5 2.5 0 0 1 0 5H9.5V8zm0 5H13a2.5 2.5 0 0 1 0 5H9.5v-5z"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="18" x2="12" y2="20"/></svg>
+              Garantia em Bitcoin
+            </div>
+            <div class="result-block btc-block" style="margin-bottom:14px">
+              <div class="result-label">BTC Necessário como Garantia</div>
+              <div class="result-value btc-color" id="res-btc-amount">—</div>
+              <div class="result-sub" id="res-btc-sub">—</div>
+            </div>
+            <div class="result-grid">
+              <div class="result-block">
+                <div class="result-label">Valor Colateral (BRL)</div>
+                <div class="result-value" id="res-collateral-brl">—</div>
+                <div class="result-sub" id="res-ltv-pct">LTV: —</div>
+              </div>
+              <div class="result-block risk-block">
+                <div class="result-label">⚠ Preço de Liquidação BTC</div>
+                <div class="result-value red" id="res-liq-price">—</div>
+                <div class="result-sub" id="res-liq-sub">—</div>
+              </div>
+            </div>
+
+            <div class="ltv-meter">
+              <div style="display:flex;justify-content:space-between;font-size:0.75rem">
+                <span style="color:var(--muted);font-family:var(--font-c)">Segurança do Colateral</span>
+                <span style="color:var(--gold);font-family:var(--font-c)" id="ltv-safety-pct">—</span>
+              </div>
+              <div class="ltv-bar-wrap"><div class="ltv-bar" id="ltv-bar" style="width:0%"></div></div>
+              <div class="ltv-labels"><span>Liquidação</span><span>Margem de Segurança</span><span>Colateral Total</span></div>
+            </div>
+          </div>
+
+          <!-- Rate info -->
+          <div class="card" style="padding:20px;background:rgba(59,130,246,0.03);border-color:var(--border-blue)">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+              <div style="font-family:var(--font-c);font-size:0.78rem;color:var(--muted)">
+                Taxa efetiva anual: <span style="color:var(--blue)" id="res-rate-year">—</span> &nbsp;|&nbsp;
+                CET estimado: <span style="color:var(--blue)" id="res-cet">—</span>
+              </div>
+              <button onclick="scrollToContract()" style="background:rgba(197,160,89,0.1);border:1px solid var(--border-gold);color:var(--gold);padding:8px 16px;border-radius:8px;font-family:var(--font-h);font-size:0.8rem;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(197,160,89,0.2)'" onmouseout="this.style.background='rgba(197,160,89,0.1)'">
+                📄 Ver Contrato ↓
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sim-grid -->
+
+    <!-- ── Contract Section ──────────────────────────────── -->
+    <div class="contract-section" id="contract-section">
+      <h2 class="section-heading">Mockup do Contrato</h2>
+      <p class="section-sub">Documento operacional gerado automaticamente com os parâmetros da simulação. Válido como referência de estrutura jurídica.</p>
+
+      <div class="contract-actions">
+        <button class="btn-contract" onclick="window.print()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir Contrato
+        </button>
+        <button class="btn-contract btn-print" onclick="copyContractId()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar ID do Contrato
+        </button>
+      </div>
+
+      <div class="contract-doc" id="contract-doc">
+        <!-- Header -->
+        <div class="contract-header-bar">
+          <div>
+            <div class="contract-logo">EPYX<span>.</span></div>
+            <div style="font-size:0.72rem;color:var(--muted);font-family:var(--font-c);margin-top:4px">EPYX SAS Uruguay — Servicios Financieros con Criptoactivos</div>
+          </div>
+          <div class="contract-id">
+            <strong id="contract-id-display">BTCauto-<span id="contract-id-val">SIMULATE</span></strong>
+            Data: <span id="contract-date">—</span><br>
+            Versão: MOCKUP v1.0 | Não vinculante
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="contract-body">
+          <div class="contract-title">Contrato de Financiamento de Veículo</div>
+          <div class="contract-subtitle">com Garantia em Criptoativos (Bitcoin) · Blockchain Collateral Agreement</div>
+
+          <div class="parties-grid">
+            <div class="party-box">
+              <div class="party-tag">Parte A — Financiador</div>
+              <div class="party-name">EPYX Financial Services SAS</div>
+              <div class="party-detail">CNPJ/RUT: XX.XXX.XXX/0001-XX<br>Montevidéu, Uruguay<br>Responsável: Diretor de Operações</div>
+            </div>
+            <div class="party-box">
+              <div class="party-tag">Parte B — Tomador</div>
+              <div class="party-name" id="c-borrower-name">[Nome do Tomador]</div>
+              <div class="party-detail" id="c-borrower-detail">CPF/RUT: XXX.XXX.XXX-XX<br>Endereço: a preencher<br>E-mail: a preencher</div>
+            </div>
+          </div>
+
+          <hr class="contract-divider">
+
+          <!-- Cláusula 1 — Objeto -->
+          <div class="clause">
+            <div class="clause-title"><div class="clause-num">1</div> Objeto do Contrato</div>
+            <p>O presente instrumento tem por objeto o financiamento de veículo automotor descrito abaixo, concedido pela Parte A à Parte B, com garantia em criptoativo Bitcoin (BTC), nos termos e condições estabelecidos neste contrato.</p>
+            <table class="clause-table" style="margin-top:14px">
+              <tr><th>Campo</th><th>Valor</th></tr>
+              <tr><td>Marca / Modelo</td><td id="c-vehicle">—</td></tr>
+              <tr><td>Ano de Fabricação</td><td id="c-year">—</td></tr>
+              <tr><td>Valor de Avaliação (R$)</td><td id="c-car-value">—</td></tr>
+              <tr><td>Valor da Entrada (R$)</td><td id="c-down">—</td></tr>
+              <tr><td>Valor Financiado (R$)</td><td id="c-principal">—</td></tr>
+            </table>
+          </div>
+
+          <!-- Cláusula 2 — Financiamento -->
+          <div class="clause">
+            <div class="clause-title"><div class="clause-num">2</div> Condições de Financiamento</div>
+            <p>O financiamento concedido será reembolsado em parcelas mensais conforme tabela Price (Sistema Francês de Amortização), com as seguintes condições:</p>
+            <table class="clause-table" style="margin-top:14px">
+              <tr><th>Parâmetro</th><th>Valor</th></tr>
+              <tr><td>Prazo Total</td><td id="c-term">—</td></tr>
+              <tr><td>Taxa de Juros Mensal</td><td id="c-rate">—</td></tr>
+              <tr><td>Taxa de Juros Anual (efetiva)</td><td id="c-rate-year">—</td></tr>
+              <tr><td>Parcela Mensal (R$)</td><td id="c-pmt">—</td></tr>
+              <tr><td>IOF incidente</td><td id="c-iof">—</td></tr>
+              <tr><td>Total a Pagar (R$)</td><td id="c-total">—</td></tr>
+              <tr><td>Custo Total do Crédito (R$)</td><td id="c-cost">—</td></tr>
+              <tr><td>Vencimento da 1ª Parcela</td><td id="c-first-due">—</td></tr>
+            </table>
+          </div>
+
+          <!-- Cláusula 3 — Garantia BTC -->
+          <div class="clause">
+            <div class="clause-title"><div class="clause-num">3</div> Garantia em Criptoativo (Bitcoin)</div>
+            <p>A Parte B constitui, em favor da Parte A, garantia real sob a forma de criptoativo Bitcoin (BTC), bloqueado em carteira multi-sig controlada por smart contract auditado, com os seguintes parâmetros:</p>
+            <table class="clause-table" style="margin-top:14px">
+              <tr><th>Parâmetro</th><th>Valor</th></tr>
+              <tr><td>Quantidade de BTC em Garantia</td><td id="c-btc-amount">—</td></tr>
+              <tr><td>Valor do Colateral (BRL) na contratação</td><td id="c-collateral-brl">—</td></tr>
+              <tr><td>Preço BTC de Referência (BRL)</td><td id="c-btc-price">—</td></tr>
+              <tr><td>Razão LTV (Loan-to-Value)</td><td id="c-ltv">—</td></tr>
+              <tr><td>Preço de Liquidação (BTC/BRL)</td><td id="c-liq-price">—</td></tr>
+              <tr><td>Custódia</td><td>Multi-sig 2-of-3 · Smart Contract Auditado</td></tr>
+            </table>
+            <div class="smart-contract-box" style="margin-top:14px">
+              <div class="sc-label">Smart Contract Address (Mock — Ethereum Mainnet)</div>
+              <div class="sc-address" id="c-sc-address">0x<span class="sc-hash" id="c-sc-hash">—</span></div>
+            </div>
+          </div>
+
+          <!-- Cláusula 4 — Liquidação -->
+          <div class="clause">
+            <div class="clause-title"><div class="clause-num">4</div> Eventos de Liquidação e Margin Call</div>
+            <p>Caso o preço de mercado do Bitcoin (BTC/BRL) atinja ou ultrapasse o Preço de Liquidação definido na Cláusula 3, a Parte A poderá, após notificação de 24 horas à Parte B:</p>
+            <p style="margin-top:10px"><strong>(a)</strong> Solicitar aporte adicional de BTC para reestabelecer o LTV contratado; ou</p>
+            <p style="margin-top:6px"><strong>(b)</strong> Liquidar parcialmente o colateral para cobrir a exposição, sem necessidade de autorização judicial, conforme cláusula de execução extrajudicial prevista em lei aplicável.</p>
+            <p style="margin-top:6px"><strong>(c)</strong> Em caso de inadimplência superior a <strong>3 (três) parcelas consecutivas</strong>, o colateral BTC integral será liquidado para quitação do saldo devedor.</p>
+          </div>
+
+          <!-- Cláusula 5 — Foro -->
+          <div class="clause">
+            <div class="clause-title"><div class="clause-num">5</div> Legislação Aplicável e Foro</div>
+            <p>O presente contrato é regido pela legislação da República Oriental do Uruguay, com aplicação subsidiária dos princípios do Direito Internacional Privado. As partes elegem a cidade de Montevidéu como foro competente para dirimir quaisquer litígios decorrentes deste instrumento, renunciando a qualquer outro, por mais privilegiado que seja.</p>
+          </div>
+
+          <!-- Assinaturas -->
+          <hr class="contract-divider">
+          <div class="signatures-grid">
+            <div class="sig-box">
+              <div class="sig-line">
+                <div class="sig-name">EPYX Financial Services SAS</div>
+                <div class="sig-role">Parte A — Financiador</div>
+                <div style="margin-top:6px;font-size:0.72rem;color:var(--muted)">Assinado digitalmente · <span id="c-sig-date">—</span></div>
+              </div>
+            </div>
+            <div class="sig-box">
+              <div class="sig-line">
+                <div class="sig-name" id="c-sig-borrower">[Nome do Tomador]</div>
+                <div class="sig-role">Parte B — Tomador</div>
+                <div style="margin-top:6px;font-size:0.72rem;color:var(--muted)">Assinatura eletrônica · Pendente</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="contract-footer-bar">
+          <span>EPYX SAS · Documento gerado em <span id="c-footer-date">—</span> · Versão MOCKUP — Não possui valor jurídico até assinatura digital</span>
+          <div class="contract-status"><div class="status-dot"></div>AGUARDANDO ASSINATURA</div>
+        </div>
+      </div>
+
+      <div class="watermark">EPYX · MOCKUP · BTC AUTO FINANCE · EPYX · MOCKUP · BTC AUTO FINANCE · EPYX</div>
+    </div>
+
+  </main>
+
+  <!-- ── Scripts ─────────────────────────────────────────── -->
+  <script>
+    // ── State ──────────────────────────────────────────────
+    let btcPriceBRL = null;
+    let btcPriceUSD = null;
+    let simData     = null;
+
+    // ── Formatting helpers ─────────────────────────────────
+    const brl  = v => v.toLocaleString('pt-BR', {style:'currency',currency:'BRL',minimumFractionDigits:2});
+    const brl0 = v => v.toLocaleString('pt-BR', {style:'currency',currency:'BRL',minimumFractionDigits:0});
+    const pct  = v => v.toFixed(2) + '%';
+    const btcFmt = v => v.toFixed(6) + ' BTC';
+
+    // ── Live BTC Price ─────────────────────────────────────
+    async function fetchBTCPrice() {
+      try {
+        const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,brl');
+        const d = await r.json();
+        btcPriceUSD = d.bitcoin.usd;
+        btcPriceBRL = d.bitcoin.brl;
+        document.getElementById('btc-usd').textContent = '$' + btcPriceUSD.toLocaleString('en-US');
+        document.getElementById('btc-brl').textContent = brl0(btcPriceBRL);
+      } catch(e) {
+        document.getElementById('btc-usd').textContent = 'Indisponível';
+        document.getElementById('btc-brl').textContent = 'Use modo manual';
+        btcPriceBRL = null;
+      }
+    }
+    fetchBTCPrice();
+    setInterval(fetchBTCPrice, 60000); // refresh a cada minuto
+
+    // ── Range inputs — live labels ─────────────────────────
+    const carValueInput = document.getElementById('car-value');
+    const downPctInput  = document.getElementById('down-pct');
+    const termInput     = document.getElementById('term');
+    const ltvInput      = document.getElementById('ltv-ratio');
+
+    function updateRangeLabels() {
+      const cv  = parseFloat(carValueInput.value) || 0;
+      const dp  = parseFloat(downPctInput.value)  || 20;
+      const tm  = parseInt(termInput.value)        || 48;
+      const ltv = parseFloat(ltvInput.value)       || 67;
+      document.getElementById('down-pct-label').textContent  = dp + '%';
+      document.getElementById('down-value-label').textContent = brl0(cv * dp / 100);
+      document.getElementById('term-label').textContent       = tm + ' meses';
+      document.getElementById('ltv-label').textContent        = pct(ltv);
+
+      // Update range visual fill
+      [downPctInput, termInput, ltvInput].forEach(inp => {
+        const min = parseFloat(inp.min), max = parseFloat(inp.max), val = parseFloat(inp.value);
+        const p = ((val - min) / (max - min) * 100).toFixed(1);
+        inp.style.setProperty('--pct', p + '%');
+      });
+    }
+    [carValueInput, downPctInput, termInput, ltvInput].forEach(el =>
+      el.addEventListener('input', updateRangeLabels));
+    updateRangeLabels();
+
+    // ── Manual BTC toggle ──────────────────────────────────
+    document.getElementById('manual-btc-toggle').addEventListener('change', function() {
+      const manual = this.checked;
+      document.getElementById('manual-btc-group').style.display = manual ? 'block' : 'none';
+      document.getElementById('btc-source-label').textContent   = manual
+        ? 'Preço manual ativado'
+        : 'Usar preço ao vivo (CoinGecko)';
+    });
+
+    // ── PMT Formula (Price/French System) ─────────────────
+    function calcPMT(P, r, n) {
+      if (r === 0) return P / n;
+      return P * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    }
+
+    // ── Generate mock smart contract address ───────────────
+    function genSCAddress() {
+      const hex = '0123456789abcdef';
+      let h = '';
+      for (let i = 0; i < 40; i++) h += hex[Math.floor(Math.random() * 16)];
+      return h;
+    }
+
+    // ── Generate contract ID ───────────────────────────────
+    function genContractId() {
+      return Math.random().toString(36).substr(2,8).toUpperCase();
+    }
+
+    // ── Main Simulation ────────────────────────────────────
+    function runSimulation() {
+      const carValue = parseFloat(document.getElementById('car-value').value) || 0;
+      const downPct  = parseFloat(document.getElementById('down-pct').value)  / 100;
+      const term     = parseInt(document.getElementById('term').value);
+      const rateM    = parseFloat(document.getElementById('rate').value)       / 100;
+      const iofPct   = parseFloat(document.getElementById('iof').value)        / 100;
+      const ltvPct   = parseFloat(document.getElementById('ltv-ratio').value)  / 100;
+      const carBrand = document.getElementById('car-brand').value  || 'N/A';
+      const carModel = document.getElementById('car-model').value  || 'N/A';
+      const carYear  = document.getElementById('car-year').value;
+
+      const manualBTC = document.getElementById('manual-btc-toggle').checked;
+      const btcPrice  = manualBTC
+        ? (parseFloat(document.getElementById('btc-manual').value) || 0)
+        : btcPriceBRL;
+
+      if (!carValue || carValue < 1000) { alert('Informe o valor do veículo.'); return; }
+      if (!btcPrice) { alert('Preço do BTC indisponível. Ative o modo manual.'); return; }
+      if (!rateM)    { alert('Informe a taxa de juros.'); return; }
+
+      const downValue   = carValue * downPct;
+      const principal   = carValue - downValue;
+      const iofValue    = principal * iofPct;
+      const financed    = principal + iofValue;
+      const pmt         = calcPMT(financed, rateM, term);
+      const totalPay    = pmt * term;
+      const creditCost  = totalPay - financed;
+      const rateYear    = (Math.pow(1 + rateM, 12) - 1) * 100;
+      const cet         = (Math.pow(1 + rateM, 12) - 1) * 100 + iofPct * 100; // simplified CET
+
+      // BTC collateral: collateral value = financed / LTV
+      const collateralBRL = financed / ltvPct;
+      const btcNeeded     = collateralBRL / btcPrice;
+      // Liquidation price: when BTC value = financed (LTV = 100%)
+      const liqPrice      = financed / btcNeeded;
+      const safetyMargin  = ((btcPrice - liqPrice) / btcPrice) * 100;
+
+      // Contract dates
+      const today     = new Date();
+      const firstDue  = new Date(today); firstDue.setMonth(firstDue.getMonth() + 1);
+      const contractId = genContractId();
+      const scHash     = genSCAddress();
+
+      simData = {
+        carValue, downValue, downPct, principal, financed, iofValue,
+        pmt, totalPay, creditCost, rateM, rateYear, cet,
+        term, collateralBRL, btcNeeded, btcPrice, liqPrice, safetyMargin, ltvPct,
+        carBrand, carModel, carYear,
+        today, firstDue, contractId, scHash
+      };
+
+      // ── Update Results UI ──────────────────────────────
+      document.getElementById('res-pmt').textContent      = brl(pmt);
+      document.getElementById('res-pmt-sub').textContent  = `${term} parcelas · ${pct(rateM)} a.m.`;
+      document.getElementById('res-principal').textContent = brl0(financed);
+      document.getElementById('res-down').textContent     = `Entrada: ${brl0(downValue)} (${(downPct*100).toFixed(0)}%)`;
+      document.getElementById('res-total').textContent    = brl(totalPay);
+      document.getElementById('res-total-sub').textContent= `Veículo + juros + IOF`;
+      document.getElementById('res-cost').textContent     = brl(creditCost);
+      document.getElementById('res-cost-sub').textContent = `${((creditCost/financed)*100).toFixed(1)}% sobre o principal`;
+
+      document.getElementById('res-btc-amount').textContent = btcFmt(btcNeeded);
+      document.getElementById('res-btc-sub').textContent    = `≈ ${brl0(collateralBRL)} (LTV ${pct(ltvPct)})`;
+      document.getElementById('res-collateral-brl').textContent = brl0(collateralBRL);
+      document.getElementById('res-ltv-pct').textContent   = `LTV ${pct(ltvPct)} · Alavancagem ${(1/ltvPct).toFixed(2)}x`;
+      document.getElementById('res-liq-price').textContent = brl0(liqPrice);
+      document.getElementById('res-liq-sub').textContent   = `Queda necessária: ${safetyMargin.toFixed(1)}% do preço atual`;
+
+      document.getElementById('res-rate-year').textContent = pct(rateYear);
+      document.getElementById('res-cet').textContent       = pct(cet) + ' a.a. (estimado)';
+
+      // LTV bar
+      document.getElementById('ltv-bar').style.width         = Math.min(safetyMargin, 100) + '%';
+      document.getElementById('ltv-safety-pct').textContent  = safetyMargin.toFixed(1) + '% de margem';
+
+      // Summary bar
+      document.getElementById('sum-financed').textContent = brl0(financed);
+      document.getElementById('sum-pmt').textContent      = brl(pmt);
+      document.getElementById('sum-btc').textContent      = btcFmt(btcNeeded);
+      document.getElementById('sum-term').textContent     = term + ' meses';
+
+      // ── Update Contract ────────────────────────────────
+      const dateStr   = today.toLocaleDateString('pt-BR');
+      const firstDueStr = firstDue.toLocaleDateString('pt-BR');
+
+      document.getElementById('contract-id-val').textContent   = contractId;
+      document.getElementById('contract-date').textContent     = dateStr;
+      document.getElementById('c-vehicle').textContent         = `${carBrand} ${carModel}`;
+      document.getElementById('c-year').textContent            = carYear;
+      document.getElementById('c-car-value').textContent       = brl0(carValue);
+      document.getElementById('c-down').textContent            = `${brl0(downValue)} (${(downPct*100).toFixed(0)}%)`;
+      document.getElementById('c-principal').textContent       = brl0(financed);
+      document.getElementById('c-term').textContent            = `${term} meses`;
+      document.getElementById('c-rate').textContent            = pct(rateM);
+      document.getElementById('c-rate-year').textContent       = pct(rateYear);
+      document.getElementById('c-pmt').textContent             = brl(pmt);
+      document.getElementById('c-iof').textContent             = `${brl(iofValue)} (${pct(iofPct)})`;
+      document.getElementById('c-total').textContent           = brl(totalPay);
+      document.getElementById('c-cost').textContent            = brl(creditCost);
+      document.getElementById('c-first-due').textContent       = firstDueStr;
+      document.getElementById('c-btc-amount').textContent      = btcFmt(btcNeeded);
+      document.getElementById('c-collateral-brl').textContent  = brl0(collateralBRL);
+      document.getElementById('c-btc-price').textContent       = brl0(btcPrice);
+      document.getElementById('c-ltv').textContent             = pct(ltvPct * 100 / 100);
+      document.getElementById('c-liq-price').textContent       = `${brl0(liqPrice)} (queda de ${safetyMargin.toFixed(1)}%)`;
+      document.getElementById('c-sc-hash').textContent         = scHash;
+      document.getElementById('c-sig-date').textContent        = dateStr;
+      document.getElementById('c-footer-date').textContent     = `${dateStr} às ${today.toLocaleTimeString('pt-BR')}`;
+
+      // ── Show panels ────────────────────────────────────
+      document.getElementById('results-placeholder').style.display = 'none';
+      document.getElementById('results-content').style.display     = 'flex';
+      document.getElementById('summary-bar').style.display         = 'grid';
+    }
+
+    function scrollToContract() {
+      document.getElementById('contract-section').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function copyContractId() {
+      const id = document.getElementById('contract-id-val').textContent;
+      if (id === 'SIMULATE') { alert('Execute a simulação primeiro.'); return; }
+      navigator.clipboard.writeText('BTCauto-' + id).then(() => {
+        const btn = event.target.closest('button');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✓ Copiado!';
+        setTimeout(() => btn.innerHTML = orig, 2000);
+      });
+    }
+
+    // ── Auto-run on Enter ──────────────────────────────────
+    document.querySelectorAll('input[type=number], select').forEach(el =>
+      el.addEventListener('keydown', e => { if(e.key==='Enter') runSimulation(); }));
+  </script>
+</body>
+</html>
