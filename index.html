@@ -399,7 +399,7 @@
             <input type="hidden" name="zc_gad" id="zc_gad" value="">
             <input type="text" style="display:none;" name="xmIwtLD" value="d6f1c1e6e11b5947200de9676b235a1b7dbf77ac8a58167ea496cb4370fdcfe1f7e7562b3168742bff37bdb7919912ca">
             <input type="text" style="display:none;" name="actionType" value="Q29udGFjdHM=">
-            <input type="text" style="display:none;" name="returnURL" value="https://epyx-portal.vercel.app/#contact">
+            <input type="text" style="display:none;" name="returnURL" value="https://epyx-portal.vercel.app/?lead=sent">
             <!-- Do not remove this code. -->
             <input type="text" style="display:none;" id="ldeskuid" name="ldeskuid">
             <input type="text" style="display:none;" id="LDTuvid" name="LDTuvid">
@@ -466,6 +466,24 @@
       </div>
     </section>
   </main>
+
+  <!-- Success Toast — shown after Zoho form redirect with ?lead=sent -->
+  <div id="lead-toast" class="lead-toast" role="alert" aria-live="polite">
+    <div class="lead-toast-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <div class="lead-toast-body">
+      <p class="lead-toast-title">Contato registrado com sucesso!</p>
+      <p class="lead-toast-desc">Nossa equipe retornará em breve.</p>
+    </div>
+    <button class="lead-toast-close" onclick="document.getElementById('lead-toast').classList.remove('visible')" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
 
   <!-- Footer -->
   <footer>

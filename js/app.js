@@ -989,4 +989,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 7. Contact form validation
   setupContactForm();
+
+  // 8. Detect Zoho form redirect ?lead=sent → show success toast & scroll to top
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('lead') === 'sent') {
+    // Clean URL immediately (no reload)
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    // Scroll smoothly to top / hero section
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Show toast after brief delay to let page settle
+    setTimeout(() => {
+      const toast = document.getElementById('lead-toast');
+      if (toast) {
+        toast.classList.add('visible');
+
+        // Auto-dismiss after 6 seconds
+        setTimeout(() => {
+          toast.classList.remove('visible');
+        }, 6000);
+      }
+    }, 600);
+  }
 });
